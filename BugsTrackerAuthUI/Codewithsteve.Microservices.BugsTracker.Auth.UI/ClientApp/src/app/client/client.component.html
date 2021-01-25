@@ -1,0 +1,61 @@
+<h1 id="tableLabel">Client Applications</h1>
+
+
+<p>List of managed client applications. <code>Set up and manage your client applications here.</code> Client applications have one, more or no bugs.<br>You may visit "<strong>Bugs</strong>" on the navbar above to raise new bugs, edit or assign them to a client. </p>
+<button class="btn m-1 btn-md btn-outline-primary"  (click)="newClient()"><code>+ </code>add new</button>
+
+<!-- <hr> -->
+
+<table class='table responsive mt-1 table-striped' id="page" aria-labelledby="tableLabel" *ngIf="clients">
+  <thead>
+    <tr>
+      <th style="width: 5%;">#</th>
+      <th>Client Code</th>
+      <th>Client Name</th>
+      <th>Description</th>
+      <th>Date</th>
+      <th  style="text-align:center">Total Bugs</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let client of clients; let i = index">
+      <td>
+          <span class="row" (click)="editClient(client)">{{i+1}}<i style="cursor: pointer;" class="fas fa-edit primary p-1"></i></span>
+      </td>
+      <td><code>{{ client.clientCode }}</code></td>
+      <td>{{ client.name }}</td>
+      <td>{{ client.description }}</td>
+      <td>{{ client.dateCreated | date }}</td>
+      <td style="text-align:center" class="text-muted">{{ client.totalBugs | number }}</td>
+      <td>
+        <i style="cursor: pointer; opacity: 0.7;" class="fas fa-trash-alt text-danger p-1" [hidden]="!canDelete(client)" (click)="openModal(template,client)"></i>
+        <button class="btn m-0 p-0 btn-sm d-flex justify-content-center align-items-center">
+          <i style="cursor: pointer; opacity: 0.7;" class="fas fa-trash-alt btn text-secodary p-1" 
+          [popover]="'Item has more than 1 bugs. Please delete the associated bugs before returning to delete this item.'" 
+          [placement]="'right'"
+          [hidden]="canDelete(client)"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #template>
+  <div class="modal-body text-center">
+    <div class="container">
+      <div class="row d-flex justify-content-center align-items-center">
+        <div><code>This action is not reversible.</code></div>
+        <div><p>Are you sure you want to delete this record?</p></div>
+      </div>
+      <div class="row d-flex justify-content-center align-items-center">
+        <button type="button" class="btn btn-danger btn-sm m-1 col-3" (click)="confirm()">Yes</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm m-1 col-3" (click)="decline()">No</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-spin-clockwise">  
+    <p style="color: white">Please Wait.. </p>  
+</ngx-spinner>  

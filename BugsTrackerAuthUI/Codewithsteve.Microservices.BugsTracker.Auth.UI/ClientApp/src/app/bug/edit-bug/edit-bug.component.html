@@ -1,0 +1,160 @@
+<div class="container">
+    <div class="modal-header">
+      <h4 class="modal-title col-10 pull-left"><span>{{mode}} </span> Bug <span *ngIf="!isNew"> - <code>{{bug?.bugCode}}</code></span></h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  
+    <div class="modal-body">
+        <form *ngIf="bugForm!=undefined" class="m-1 p-1 form-horizontal form-material" novalidate
+          (ngSubmit)="saveBug()"
+          [formGroup]="bugForm">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-12 col-sm-12">
+                <div class="form-group row">
+                  <label for="name" class="col-md-6">Title: </label>
+                  <div class="col-md-12">
+                    <input  id="name" type="text" class="form-control form-control-line" formControlName="name" placeholder="Title" autofocus>
+                    <small class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('name')">
+                      <small *ngIf="hasTypeError('name','required')">{{controlMessage('name', 'required')}}</small>
+                      <small *ngIf="hasTypeError('name','minlength')">{{controlMessage('name', 'minlength')}}</small>
+                      <small *ngIf="hasTypeError('name','maxlength')">{{controlMessage('name', 'maxlength')}}</small>
+                    </small>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="ml-0 p-0 col-md-6 col-sm-12">
+                    <label for="clientId" class="col-md-12">Client Application: </label>
+                    <div class="col-md-12">
+                      <select name="clientId"  class="form-control form-control-line col-md-12" id="clientId" type="text"  formControlName="clientId" placeholder="Select one">
+                        <option *ngIf="formvalue('clientId')==''" value="">Select Application</option>
+                        <option *ngFor="let app of clients" [value]="app?.clientId">
+                            {{app?.name}}
+                        </option>
+                     </select>
+                      <small class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('clientId')">
+                        <small *ngIf="hasTypeError('clientId','required')">{{controlMessage('clientId', 'required')}}</small>
+                      </small>
+                    </div>
+                  </div>
+                  <div class="ml-0 p-0 col-md-6 col-sm-12">
+                    <label for="status" class="col-md-12">Status: </label>
+                    <div class="col-md-12">
+                      <select name="status"  class="form-control form-control-line col-md-12"  id="status" type="text" formControlName="status" placeholder="Select one">
+                        <option *ngIf="formvalue('status')==''" value="">Select Status</option>
+                        <option *ngFor="let stat of statusList" [value]="stat">
+                            {{stat}}
+                        </option>
+                     </select>
+                      <small  class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('status')">
+                        <small *ngIf="hasTypeError('status','required')">{{controlMessage('status', 'required')}}</small>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="description" class="col-md-6">Description: </label>
+                  <div class="col-md-12">
+                    <textarea name="description"  id="description" type="text" class="form-control"maxlength="255" formControlName="description" placeholder="Description" rows="3"></textarea>
+                    <small class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('description')">
+                      <small *ngIf="hasTypeError('description','required')">{{controlMessage('description', 'required')}}</small>
+                      <small *ngIf="hasTypeError('description','minlength')">{{controlMessage('description', 'minlength')}}</small>
+                      <small *ngIf="hasTypeError('description','maxlength')">{{controlMessage('description', 'maxlength')}}</small>
+                    </small>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="ml-0 p-0 col-md-6 col-sm-12">
+                    <label for="priority" class="col-md-12">Priority: </label>
+                    <div class="col-md-12">
+                      <select name="priority"  class="form-control form-control-line col-md-12"  maxlength="20" id="priority" type="text" (change)="calculateSeverity()"  formControlName="priority" placeholder="Select one">
+                        <option *ngIf="formvalue('priority')==''" value="">Select Priority</option>
+                        <option *ngFor="let score of scores" [value]="score?.score">
+                            {{score?.score}} - {{score?.name}}
+                        </option>
+                     </select>
+                      <small class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('priority')">
+                        <small *ngIf="hasTypeError('priority','required')">{{controlMessage('priority', 'required')}}</small>
+                      </small>
+                    </div>
+                  </div>
+                  <div class="ml-0 p-0 col-md-6 col-sm-12">
+                    <label for="impact" class="col-md-12">Impact: </label>
+                    <div class="col-md-12">
+                      <select name="impact"  class="form-control form-control-line col-md-12"  maxlength="20" id="impact" type="text" (change)="calculateSeverity()"  formControlName="impact" placeholder="Select one">
+                        <option *ngIf="formvalue('impact')==''" value="">Select Impact</option>
+                        <option *ngFor="let score of scores" [value]="score?.score">
+                            {{score?.score}} - {{score?.name}}
+                        </option>
+                     </select>
+                      <small  class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('impact')">
+                        <small *ngIf="hasTypeError('impact','required')">{{controlMessage('impact', 'required')}}</small>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="hasFormvalue('severity')" class="form-group row">
+                  <div class="ml-0 p-0 col-md-6 col-sm-12">
+                    <label for="severity" class="col-md-6">Severity: </label>
+                    <div class="col-md-6">
+                      <div class="col-md-12">
+                        <span  [ngClass]="{'bg-success': colourCode() == 'green', 'bg-danger':colourCode() === 'red', 'bg-warning':colourCode() === 'amber' }"  class="ml-1  mediumDot">
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ml-0 p-0 col-md-6 col-sm-12">
+                    <label for="severity" class="col-md-6">Score: </label>
+                    <div class="col-md-6">
+                      <div class="col-md-12">
+                        <h1>
+                          <code>{{formvalue('severity')}}</code>
+                        </h1>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="resolveByDate" class="col-md-6">Resolution Due Date: </label>
+                  <div class="col-md-12">
+                    <input
+                    id="resolveByDate" 
+                    type="date" 
+                    class="form-control" 
+                    formControlName="resolveByDate" />
+                    <small  class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('resolveByDate')">
+                      <small *ngIf="hasTypeError('resolveByDate','required')">{{controlMessage('resolveByDate', 'required')}}</small>
+                    </small>
+                  </div>
+                </div>
+             
+                <!-- <div class="form-group row">
+                  <label for="notes" class="col-md-6">Notes: </label>
+                  <div class="col-md-12">
+                    <textarea name="notes"  id="notes" type="text" class="form-control" formControlName="notes" placeholder="Notes" rows="3"></textarea>
+                    <small  class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('notes')">
+                      <small *ngIf="hasTypeError('notes','required')">{{controlMessage('notes', 'required')}}</small>
+                    </small>
+                  </div>
+                </div>
+             -->
+              </div>
+            </div>
+          </div>
+        </form>
+        <span class="m-1 text-primary">{{formvalue('severitylevel')}}</span>
+    </div>
+    <div class="modal-footer">
+      <div class="row">
+        <button *ngIf="(!isNew)"  class="btn btn-outline-danger m-1 btn-sm" style="align-self: start;">Delete</button>
+        <button class="btn btn-outline-secondary btn-sm m-1"  (click)="modalRef.hide()">Cancel</button>
+        <button  [hidden]="!canSave" type="submit" class="btn btn-raised btn-outline-primary btn-sm m-1"  (click)="saveBug()">Save</button>
+      </div>
+    </div>
+  </div>
+  
+
+    
+    

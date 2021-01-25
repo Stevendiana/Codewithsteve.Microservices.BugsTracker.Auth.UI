@@ -5,6 +5,11 @@ a {
   color: #0366d6;
 }
 
+/* toast notification to show */
+#toast-container > div {
+  opacity:1;
+}
+
 code {
   color: #e01a76;
 }
@@ -14,3 +19,49 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+
+.dot {
+  height: 25px;
+  width: 25px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.minidot {
+  height: 12px;
+  width: 12px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.mediumDot {
+  height: 50px;
+  width: 50px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+input.ng-dirty.ng-touched.ng-invalid {
+  border: 1px solid red;
+}
+
+input.ng-touched.ng-valid {
+  border: 1px solid green;
+}
+
+/* input.ng-dirty.ng-invalid {
+  color: red
+} */
+
+ /* remove bootstrap blue input box glow */
+.form-control:focus {
+  box-shadow:none !important;
+}
+
+/* input.ng-invalid.ng-touched {
+  border: 1px solid red;
+} */

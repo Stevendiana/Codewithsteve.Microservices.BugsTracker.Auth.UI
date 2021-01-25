@@ -1,0 +1,53 @@
+<div class="container">
+    <div class="modal-header">
+      <h4 class="modal-title col-10 pull-left"><span>{{mode}} </span> Client <span *ngIf="!isNew"> - <code>{{client?.clientCode}}</code></span></h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  
+    <div class="modal-body">
+        <form *ngIf="clientForm!=undefined" class="m-1 p-1 form-horizontal form-material" novalidate
+          (ngSubmit)="saveClient()"
+          [formGroup]="clientForm">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-12 col-sm-12">
+                <div class="form-group row">
+                  <label for="name" class="col-md-6">Title: </label>
+                  <div class="col-md-12">
+                    <input  id="name" type="text" class="form-control form-control-line" formControlName="name" placeholder="Title" autofocus>
+                    <small class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('name')">
+                      <small *ngIf="hasTypeError('name','required')">{{controlMessage('name', 'required')}}</small>
+                      <small *ngIf="hasTypeError('name','minlength')">{{controlMessage('name', 'minlength')}}</small>
+                      <small *ngIf="hasTypeError('name','maxlength')">{{controlMessage('name', 'maxlength')}}</small>
+                    </small>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="description" class="col-md-6">Description: </label>
+                  <div class="col-md-12">
+                    <textarea name="description"  id="description" type="text" class="form-control" formControlName="description" placeholder="Description" rows="3"></textarea>
+                    <small class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('description')">
+                      <small *ngIf="hasTypeError('description','required')">{{controlMessage('description', 'required')}}</small>
+                      <small *ngIf="hasTypeError('description','minlength')">{{controlMessage('description', 'minlength')}}</small>
+                      <small *ngIf="hasTypeError('description','maxlength')">{{controlMessage('description', 'maxlength')}}</small>
+                    </small>
+                  </div>
+                </div>
+               
+              </div>
+            </div>
+          </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button *ngIf="(!isNew)" class="btn btn-outline-danger col-3 btn-sm m-1">Delete</button>
+        <button class="btn btn-outline-secondary btn-sm col-3 m-1"  (click)="modalRef.hide()">Cancel</button>
+        <button  [hidden]="!canSave" type="submit" class="btn btn-raised col-3 btn-outline-primary btn-sm m-1"  (click)="saveClient()">Save</button>
+    </div>
+  </div>
+  
+  
+    
+    
