@@ -1,6 +1,6 @@
 using System;
 
-namespace Codewithsteve.Microservices.BugsTracker.Auth.UI
+namespace Codewithsteve.BugsTracker.Auth.UI
 {
     public class WeatherForecast
     {

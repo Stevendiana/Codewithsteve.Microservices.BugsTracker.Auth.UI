@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Codewithsteve.Microservices.BugsTracker.Auth.UI
+namespace Codewithsteve.BugsTracker.Auth.UI
 {
     public class Startup
     {

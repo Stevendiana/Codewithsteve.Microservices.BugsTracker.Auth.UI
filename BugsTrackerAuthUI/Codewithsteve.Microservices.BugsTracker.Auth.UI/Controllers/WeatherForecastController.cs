@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Codewithsteve.Microservices.BugsTracker.Auth.UI.Controllers
+namespace Codewithsteve.BugsTracker.Auth.UI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
