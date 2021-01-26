@@ -123,7 +123,7 @@ export class HomeComponent implements OnInit {
             }]
         },
         options: {
-          responsive: false,
+          responsive: true,
           display:true
         }
       });
@@ -156,7 +156,7 @@ export class HomeComponent implements OnInit {
             }]
         },
         options: {
-          responsive: false,
+          responsive: true,
           display:true,
           tooltips: {
             enabled: true

@@ -4,13 +4,17 @@
   >
     <div class="container">
       <a class="navbar-brand" [routerLink]="['/']">
-        <div class="row">
+        <div class="row ">
          
-          <div>
-            <span> <span class="text-primary">Code-with-steve</span>
+          <div class="ml-1">
+            <span> <span class="text-primary">CWS</span>
               BugsTracker</span>
           </div>
-           <div class="logo-image">
+          <!-- <div class="pull-left">
+            <small class="text-primary m-0 p-0">Code-with-steve</small><br>
+            <small class="m-0 p-0">BugsTracker</small>
+          </div> -->
+           <div class="logo-image d-flex justify-content-center align-items-center">
             <img src="assets/bug_logo_sm.png" class="img-fluid">
           </div>
         </div>
@@ -31,16 +35,34 @@
         [ngClass]="{ show: isExpanded }"
       >
         <ul class="navbar-nav flex-grow">
+         
           <li class="nav-item"
               [routerLinkActive]="['link-active']"
               [routerLinkActiveOptions]="{ exact: true }">
-            <a class="nav-link text-dark" [routerLink]="['/']">Home</a>
+            <button class="text-dark btn btn-sm btn-outline-secondary m-1" [routerLink]="['/']">Home</button>
+          </li>
+          <li *ngIf="loggedIn" class="nav-item" [routerLinkActive]="['link-active']">
+            <button class="text-dark btn btn-sm btn-outline-secondary m-1" [routerLink]="['/about']">About</button>
+          </li>
+          <li *ngIf="loggedIn" class="nav-item" [routerLinkActive]="['link-active']">
+            <button class="text-dark btn btn-sm btn-outline-secondary m-1" [routerLink]="['/clients']">Clients</button>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/clients']">Clients</a>
+            <button class="text-dark btn btn-sm btn-outline-secondary m-1" [routerLink]="['/bugs']">Bugs</button>
+          </li>
+
+          <li *ngIf="loggedIn" class="nav-item ml-5" [routerLinkActive]="['link-active']">
+            <a>
+              <img class="rounded-circle img-fluid" style="border-radius: 50%; cursor: pointer; width: 35px;" [routerLink]="['/profile']" *ngIf="photo" [src]="photo">
+            </a>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/bugs']">Bugs</a>
+            <span  *ngIf="loggedIn" class="m-1 ml-0">
+                <strong>Welcome</strong><code> {{profile?.displayName}}</code>!
+            </span>
+            <button class="btn btn-sm btn-primary m-1" *ngIf="!loggedIn" (click)="login()">Login</button>
+            <button class="btn btn-sm btn-outline-primary m-1" *ngIf="loggedIn" (click)="logout()">Logout</button>
+           
           </li>
         </ul>
       </div>

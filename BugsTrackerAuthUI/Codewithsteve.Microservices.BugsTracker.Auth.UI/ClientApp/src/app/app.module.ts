@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule} from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -19,6 +19,13 @@ import { ToastrModule } from 'ngx-toastr';
 import { AppFormService } from './app-form-service';
 import { AppService } from './app.service';
 import { PopoverModule } from 'ngx-bootstrap/popover';
+import { MsalInterceptor, MsalModule, MsalService } from '@azure/msal-angular';
+import { AboutComponent } from './about/about.component';
+import { ProfileComponent } from './user/profile/profile.component';
+import { AppUserService } from './app-user-service';
+import { RoleGuard } from './role.guard';
+
+const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
 
 
 @NgModule({
@@ -32,6 +39,8 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
     ClientComponent,
     EditClientComponent,
     EditBugComponent,
+    ProfileComponent,
+    AboutComponent,
   ],
   entryComponents: [EditBugComponent,EditClientComponent],
   imports: [
@@ -50,10 +59,44 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'clients', component: ClientComponent },
       { path: 'bugs', component: BugComponent },
+      { path: 'about', component: AboutComponent },
+      { path: 'profile', component: ProfileComponent },
     ]),
+    MsalModule.forRoot({
+      auth: {
+        clientId: 'd2227ccb-22e8-4c84-8dba-52fd4654b35e',
+        authority: 'https://login.microsoftonline.com/cc62c95e-bb02-4841-ae1e-9bafd6e5d6b5',
+        // redirectUri: 'http://localhost:4200/',
+        redirectUri: ' https://codewithstevemicroservicesbugstrackerauth.azurewebsites.net/',
+       
+      },
+      cache: {
+        cacheLocation: 'localStorage',
+        storeAuthStateInCookie: isIE, // set to true for IE 11
+      },
+    },
+    {
+      popUp: !isIE,
+      consentScopes: [
+        'user.read',
+        'openid',
+        'profile',
+      ],
+      unprotectedResources: [],
+      protectedResourceMap: [
+        ['https://graph.microsoft.com/v1.0/me', ['user.read']],
+        ['https://graph.microsoft.com/beta/', ['user.read']],
+      ],
+      extraQueryParameters: {}
+    })
   ],
   providers: [
-    BsModalRef, AppFormService, AppService
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: MsalInterceptor,
+      multi: true
+    },
+    MsalService, BsModalRef, AppFormService, AppService,AppUserService, RoleGuard
   ],
   bootstrap: [AppComponent]
 })

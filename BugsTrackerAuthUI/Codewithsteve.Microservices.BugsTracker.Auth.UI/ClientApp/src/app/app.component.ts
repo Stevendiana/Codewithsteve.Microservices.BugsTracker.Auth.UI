@@ -6,7 +6,8 @@ import { Subscription } from 'rxjs';
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
-
+  isIframe = false;
+  
   constructor() { }
 
   ngOnInit() {
