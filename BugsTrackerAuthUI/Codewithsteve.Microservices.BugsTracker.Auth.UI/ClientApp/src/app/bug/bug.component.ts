@@ -1,4 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { MsalService } from '@azure/msal-angular';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from "ngx-spinner";
 import { ToastrService } from 'ngx-toastr';
@@ -18,6 +20,8 @@ export class BugComponent implements OnInit {
   clients: IClient[]=[];
   bug: IBug;
   selectedBug: IBug;
+  loggedIn = false;
+  roles: string;
 
   modalRef: BsModalRef;
   modalConfig = {
@@ -30,8 +34,10 @@ export class BugComponent implements OnInit {
  
 
   constructor(
+    public route:Router,
     private modalService: BsModalService, 
     private toastr: ToastrService,
+    private authService: MsalService,
     private spinner: NgxSpinnerService,
     public appService: AppService) { }
 
@@ -40,7 +46,13 @@ export class BugComponent implements OnInit {
     this.appService.getBugs();
     this.getBugs();
     this.appService.getClients();
+    this.checkAccount();
 
+  }
+
+  gotoContactme() {
+    this.modalRef.hide();
+    this.route.navigate(['/contact-admin']);
   }
 
   colourCode(bug) {
@@ -112,6 +124,11 @@ export class BugComponent implements OnInit {
 
   }
 
+  gotofeatures() {
+    window.open('/about/#features', '_blank', 'location=yes,height=570,width=1040,scrollbars=yes,status=yes');
+  }
+
+ 
 
   getBugs() {
 
@@ -145,7 +162,7 @@ export class BugComponent implements OnInit {
       mode: 'New',
       clients: this.clients
     };
-    this.modalRef = this.modalService.show(EditBugComponent, Object.assign({}, this.modalConfig, { class: 'modal-md', initialState }));
+    this.modalRef = this.modalService.show(EditBugComponent, Object.assign({}, this.modalConfig, { class: 'modal-lg', initialState }));
     this.modalRef.content.closeBtnName = 'Close';
   }
 
@@ -160,13 +177,26 @@ export class BugComponent implements OnInit {
           mode: 'Edit',
           clients: this.clients
         };
-        this.modalRef = this.modalService.show(EditBugComponent, Object.assign({}, this.modalConfig, { class: 'modal-md', initialState }));
+        this.modalRef = this.modalService.show(EditBugComponent, Object.assign({}, this.modalConfig, { class: 'modal-lg', initialState }));
         this.modalRef.content.closeBtnName = 'Close';
       }
     });
   
   
   }
+  checkAccount() {
+    this.loggedIn = !!this.authService.getAccount();
+    this.update();
+  }
+
+  update() {
+    const account = this.authService.getAccount();
+    if (account!=null||account!=undefined) {
+
+      this.roles = account.idToken.roles;
+    }
+  }
+
 
   deleteBug(bug: Bug){
     this.appService.deleteBug(bug.bugId).subscribe(()=> { 
@@ -182,7 +212,7 @@ export class BugComponent implements OnInit {
   openModal(template: TemplateRef<any>,bug: Bug) {
 
     this.selectedBug=bug;
-    this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+    this.modalRef = this.modalService.show(template, {class: 'modal-ms'});
   }
  
   confirm(): void {
@@ -193,6 +223,8 @@ export class BugComponent implements OnInit {
   decline(): void {
     this.modalRef.hide();
   }
+
+  get isAdmin(): boolean { if(this.roles!=undefined&&this.roles.length>0) {return this.roles.includes('Admin')}};
  
 }
 

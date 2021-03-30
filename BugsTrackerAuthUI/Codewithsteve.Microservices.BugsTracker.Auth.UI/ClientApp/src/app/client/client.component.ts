@@ -98,6 +98,8 @@ export class ClientComponent implements OnInit {
 
   }
 
+ 
+
   openModal(template: TemplateRef<any>,client: Client) {
 
     this.selectedClient=client;

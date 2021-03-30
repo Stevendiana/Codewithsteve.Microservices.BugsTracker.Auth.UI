@@ -1,0 +1,24 @@
+select {
+    /* for Firefox */
+    -moz-appearance: none;
+    /* for Chrome */
+    -webkit-appearance: none;
+}
+  
+/* For IE10 */
+select::-ms-expand {
+    display: none;
+}
+
+.app-modal {
+    max-height: 75vh;
+    overflow: auto;
+}
+
+.modal-body {
+    overflow-y: auto;
+    overflow-x: hidden; 
+}
+
+  
+

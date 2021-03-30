@@ -1,0 +1,95 @@
+
+<div class="container col-md-6 col-sm-12">
+  <div class="row">
+    <h1 id="tableLabel" class="m-1 mb-3">Contact Steve</h1>
+
+    <div class="row col-md-12 m-1">
+      <span>
+        <img class="rounded-circle img-fluid" style="border-radius: 50%;width: 35px;" src="assets/new_git_image.jpg">
+      </span>
+      <span class="ml-2">
+          <div><i>Stephen Ndiananie, </i><code>Developer</code></div>
+      </span>
+    </div>
+    
+
+  </div>
+  <p class="m-1 mt-2 ">Please complete this form to contact the developer.</p>
+ 
+    
+  <div class="card">
+    <form *ngIf="contactForm!=undefined" class="m-1 p-1 form-horizontal form-material" novalidate
+      (ngSubmit)="sendMessage()"
+      [formGroup]="contactForm">
+      <div class="container-fluid">
+        <div class="row ">
+          <div class="col-sm-12">
+            <div class="form-group row">
+              <label for="firstname" class="col-md-6">First Name: </label>
+              <div class="col-md-12">
+                <input  id="firstname" type="text" class="form-control form-control-line" formControlName="firstname" placeholder="First name" autofocus [ngClass]="{ 'is-invalid':hasError('firstname'),'is-valid':noError('firstname') }">
+                <small class="form-text invalid-feedback" *ngIf="isInvalidDirtyTouched('firstname')">
+                  <small *ngIf="hasTypeError('firstname','required')">{{controlMessage('firstname', 'required')}}</small>
+                  <small *ngIf="hasTypeError('firstname','minlength')">{{controlMessage('firstname', 'minlength')}}</small>
+                  <small *ngIf="hasTypeError('firstname','maxlength')">{{controlMessage('firstname', 'maxlength')}}</small>
+                </small>
+              </div>
+            </div>
+            <div class="form-group row">
+                <label for="lastname" class="col-md-6">Last Name: </label>
+                <div class="col-md-12">
+                  <input  id="lastname" type="text" class="form-control form-control-line" formControlName="lastname" placeholder="Last name" [ngClass]="{ 'is-invalid':hasError('lastname'),'is-valid':noError('lastname') }">
+                  <small class="form-text invalid-feedback" *ngIf="isInvalidDirtyTouched('lastname')">
+                    <small *ngIf="hasTypeError('lastname','required')">{{controlMessage('lastname', 'required')}}</small>
+                    <small *ngIf="hasTypeError('lastname','minlength')">{{controlMessage('lastname', 'minlength')}}</small>
+                    <small *ngIf="hasTypeError('lastname','maxlength')">{{controlMessage('lastname', 'maxlength')}}</small>
+                  </small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="email" class="col-md-6">Email: </label>
+                <div class="col-md-12">
+                  <input  id="email" type="email" class="form-control form-control-line" formControlName="email" placeholder="Email" [ngClass]="{ 'is-invalid':hasError('email'),'is-valid':noError('email') }">
+                  <small class="form-text invalid-feedback" *ngIf="isInvalidDirtyTouched('email')">
+                    <small *ngIf="hasTypeError('email','required')">{{controlMessage('email', 'required')}}</small>
+                    <small *ngIf="hasTypeError('email','pattern')">{{controlMessage('email', 'pattern')}}</small>
+                  </small>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="subject" class="col-md-6">Subject: </label>
+                <div class="col-md-12">
+                  <input  id="subject" type="text" class="form-control form-control-line" formControlName="subject" placeholder="Subject" [ngClass]="{ 'is-invalid':hasError('subject'),'is-valid':noError('subject') }">
+                  <small class="form-text invalid-feedback" *ngIf="isInvalidDirtyTouched('subject')">
+                    <small *ngIf="hasTypeError('subject','required')">{{controlMessage('subject', 'required')}}</small>
+                    <small *ngIf="hasTypeError('subject','minlength')">{{controlMessage('subject', 'minlength')}}</small>
+                    <small *ngIf="hasTypeError('subject','maxlength')">{{controlMessage('subject', 'maxlength')}}</small>
+                  </small>
+                </div>
+              </div>
+            <div class="form-group row">
+              <label for="message" class="col-md-6">Message: </label>
+              <div class="col-md-12">
+                <textarea name="message"  id="message" type="text" class="form-control" formControlName="message" placeholder="Message" rows="7" [ngClass]="{ 'is-invalid':hasError('message'),'is-valid':noError('message') }"></textarea>
+                <small class="form-text invalid-feedback" *ngIf="isInvalidDirtyTouched('message')">
+                  <small *ngIf="hasTypeError('message','required')">{{controlMessage('message', 'required')}}</small>
+                  <small *ngIf="hasTypeError('message','minlength')">{{controlMessage('message', 'minlength')}}</small>
+                  <small *ngIf="hasTypeError('message','maxlength')">{{controlMessage('message', 'maxlength')}}</small>
+                </small>
+              </div>
+            </div>
+           
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="card-footer">
+        <button class="btn btn-outline-secondary btn-md  m-1"  (click)="resetForm()">Cancel</button>
+        <button  [disabled]="!canSave" type="submit" class="btn btn-raised btn-primary btn-md m-1 float-right"  (click)="sendMessage()">Send</button>
+    </div>
+  </div>
+</div>
+  
+  
+    
+    

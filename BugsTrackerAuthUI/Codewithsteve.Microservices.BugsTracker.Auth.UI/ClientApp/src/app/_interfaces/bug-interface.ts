@@ -21,6 +21,8 @@ export interface IBug {
     lastModifiedBy: string;
     resolvedBy: string;
     signedoffBy: string;
+    // assignedTo: string;
+    // dateAssigned: string;
 
     client:  any;
     project: any;

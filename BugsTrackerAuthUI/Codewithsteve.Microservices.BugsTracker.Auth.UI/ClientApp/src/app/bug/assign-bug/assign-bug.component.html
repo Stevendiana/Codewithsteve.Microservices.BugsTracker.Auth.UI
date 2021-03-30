@@ -6,7 +6,7 @@
       </button>
     </div>
   
-    <div class="app-modal modal-body">
+    <div class="modal-body">
         <form *ngIf="bugForm!=undefined" class="m-1 p-1 form-horizontal form-material" novalidate
           (ngSubmit)="saveBug()"
           [formGroup]="bugForm">
@@ -16,9 +16,8 @@
                 <div class="form-group row">
                   <label for="name" class="col-md-6">Title: </label>
                   <div class="col-md-12">
-                    <input  id="name" type="text" class="form-control form-control-line" formControlName="name" placeholder="Title" autofocus 
-                    [ngClass]="{ 'is-invalid':hasError('name'),'is-valid':noError('name') }">
-                    <small class="form-text invalid-feedback" *ngIf="isInvalidDirtyTouched('name')">
+                    <input  id="name" type="text" class="form-control form-control-line" formControlName="name" placeholder="Title" autofocus>
+                    <small class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('name')">
                       <small *ngIf="hasTypeError('name','required')">{{controlMessage('name', 'required')}}</small>
                       <small *ngIf="hasTypeError('name','minlength')">{{controlMessage('name', 'minlength')}}</small>
                       <small *ngIf="hasTypeError('name','maxlength')">{{controlMessage('name', 'maxlength')}}</small>
@@ -29,14 +28,13 @@
                   <div class="ml-0 p-0 col-md-6 col-sm-12">
                     <label for="clientId" class="col-md-12">Client Application: </label>
                     <div class="col-md-12">
-                      <select name="clientId"  class="form-control form-control-line col-md-12" id="clientId" type="text"  formControlName="clientId" placeholder="Select one" 
-                      [ngClass]="{ 'is-invalid':hasError('clientId'),'is-valid':noError('clientId') }">
+                      <select name="clientId"  class="form-control form-control-line col-md-12" id="clientId" type="text"  formControlName="clientId" placeholder="Select one">
                         <option *ngIf="formvalue('clientId')==''" value="">Select Application</option>
                         <option *ngFor="let app of clients" [value]="app?.clientId">
                             {{app?.name}}
                         </option>
                      </select>
-                      <small class="form-text invalid-feedback" *ngIf="isInvalidDirtyTouched('clientId')">
+                      <small class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('clientId')">
                         <small *ngIf="hasTypeError('clientId','required')">{{controlMessage('clientId', 'required')}}</small>
                       </small>
                     </div>
@@ -44,18 +42,13 @@
                   <div class="ml-0 p-0 col-md-6 col-sm-12">
                     <label for="status" class="col-md-12">Status: </label>
                     <div class="col-md-12">
-                      <select *ngIf="loggedIn&&(!isNew)"  name="status"  class="form-control form-control-line col-md-12"  id="status" type="text" formControlName="status" placeholder="Select one" 
-                      [ngClass]="{ 'is-invalid':hasError('status'),'is-valid':noError('status') }">
+                      <select name="status"  class="form-control form-control-line col-md-12"  id="status" type="text" formControlName="status" placeholder="Select one">
                         <option *ngIf="formvalue('status')==''" value="">Select Status</option>
                         <option *ngFor="let stat of statusList" [value]="stat">
                             {{stat}}
                         </option>
                      </select>
-                     <h4 class="font-medium-4 text-primary mt-1 mb-0">
-                      <!-- <span [style.background-color]="formvalue('status')"  class="ml-1 minidot"></span> -->
-                      <span class="text-monospace badge badge-success  m-1"  [style.background-color]="checkStatus(formvalue('status'))">{{formvalue('status')}}</span>
-                     </h4>
-                      <small  class="form-text invalid-feedback" *ngIf="isInvalidDirtyTouched('status')">
+                      <small  class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('status')">
                         <small *ngIf="hasTypeError('status','required')">{{controlMessage('status', 'required')}}</small>
                       </small>
                     </div>
@@ -64,9 +57,8 @@
                 <div class="form-group row">
                   <label for="description" class="col-md-6">Description: </label>
                   <div class="col-md-12">
-                    <textarea name="description"  id="description" type="text" class="form-control"maxlength="255" formControlName="description" placeholder="Description" rows="3" 
-                    [ngClass]="{ 'is-invalid':hasError('description'),'is-valid':noError('description') }"></textarea>
-                    <small class="form-text invalid-feedback" *ngIf="isInvalidDirtyTouched('description')">
+                    <textarea name="description"  id="description" type="text" class="form-control"maxlength="255" formControlName="description" placeholder="Description" rows="3"></textarea>
+                    <small class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('description')">
                       <small *ngIf="hasTypeError('description','required')">{{controlMessage('description', 'required')}}</small>
                       <small *ngIf="hasTypeError('description','minlength')">{{controlMessage('description', 'minlength')}}</small>
                       <small *ngIf="hasTypeError('description','maxlength')">{{controlMessage('description', 'maxlength')}}</small>
@@ -77,14 +69,13 @@
                   <div class="ml-0 p-0 col-md-6 col-sm-12">
                     <label for="priority" class="col-md-12">Priority: </label>
                     <div class="col-md-12">
-                      <select name="priority"  class="form-control form-control-line col-md-12"  maxlength="20" id="priority" type="text" (change)="calculateSeverity()"  formControlName="priority" placeholder="Select one" 
-                      [ngClass]="{ 'is-invalid':hasError('priority'),'is-valid':noError('priority') }">
+                      <select name="priority"  class="form-control form-control-line col-md-12"  maxlength="20" id="priority" type="text" (change)="calculateSeverity()"  formControlName="priority" placeholder="Select one">
                         <option *ngIf="formvalue('priority')==''" value="">Select Priority</option>
                         <option *ngFor="let score of scores" [value]="score?.score">
                             {{score?.score}} - {{score?.name}}
                         </option>
                      </select>
-                      <small class="form-text invalid-feedback" *ngIf="isInvalidDirtyTouched('priority')">
+                      <small class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('priority')">
                         <small *ngIf="hasTypeError('priority','required')">{{controlMessage('priority', 'required')}}</small>
                       </small>
                     </div>
@@ -92,14 +83,13 @@
                   <div class="ml-0 p-0 col-md-6 col-sm-12">
                     <label for="impact" class="col-md-12">Impact: </label>
                     <div class="col-md-12">
-                      <select name="impact"  class="form-control form-control-line col-md-12"  maxlength="20" id="impact" type="text" (change)="calculateSeverity()"  formControlName="impact" placeholder="Select one" 
-                      [ngClass]="{ 'is-invalid':hasError('impact'),'is-valid':noError('impact') }">
+                      <select name="impact"  class="form-control form-control-line col-md-12"  maxlength="20" id="impact" type="text" (change)="calculateSeverity()"  formControlName="impact" placeholder="Select one">
                         <option *ngIf="formvalue('impact')==''" value="">Select Impact</option>
                         <option *ngFor="let score of scores" [value]="score?.score">
                             {{score?.score}} - {{score?.name}}
                         </option>
                      </select>
-                      <small  class="form-text invalid-feedback" *ngIf="isInvalidDirtyTouched('impact')">
+                      <small  class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('impact')">
                         <small *ngIf="hasTypeError('impact','required')">{{controlMessage('impact', 'required')}}</small>
                       </small>
                     </div>
@@ -133,32 +123,34 @@
                     id="resolveByDate" 
                     type="date" 
                     class="form-control" 
-                    formControlName="resolveByDate" 
-                    [ngClass]="{ 'is-invalid':hasError('resolveByDate'),'is-valid':noError('resolveByDate') }"/>
-                    <small  class="form-text" *ngIf="isInvalidDirtyTouched('resolveByDate')">
+                    formControlName="resolveByDate" />
+                    <small  class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('resolveByDate')">
                       <small *ngIf="hasTypeError('resolveByDate','required')">{{controlMessage('resolveByDate', 'required')}}</small>
                     </small>
                   </div>
                 </div>
              
-                <div class="row" *ngIf="!loggedIn&&!isNew">
-                  <div class="alert alert-info">
-                    <p>Only logged in users are allowed to edit or delete bugs. <em>Form is shown for demostration purpose only.</em> </p>
-                    <p>To get a temporary log in so that you can get permissions to edit or delete a bug as a guest user or for any questions, please <button class="btn btn-sm btn-primary" (click)="gotoContactme()">Contact Developer</button> </p>
+                <!-- <div class="form-group row">
+                  <label for="notes" class="col-md-6">Notes: </label>
+                  <div class="col-md-12">
+                    <textarea name="notes"  id="notes" type="text" class="form-control" formControlName="notes" placeholder="Notes" rows="3"></textarea>
+                    <small  class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('notes')">
+                      <small *ngIf="hasTypeError('notes','required')">{{controlMessage('notes', 'required')}}</small>
+                    </small>
                   </div>
                 </div>
+             -->
               </div>
             </div>
           </div>
         </form>
-        <!-- <span class="m-1 text-primary">{{formvalue('severitylevel')}}</span> -->
+        <span class="m-1 text-primary">{{formvalue('severitylevel')}}</span>
     </div>
     <div class="modal-footer">
-     
       <div class="row">
-        <!-- <button *ngIf="loggedIn&&(!isNew)"  class="btn btn-outline-danger m-1 btn-sm" style="align-self: start;" [disabled]="!loggedIn">Delete</button> -->
+        <button *ngIf="(!isNew)"  class="btn btn-outline-danger m-1 btn-sm" style="align-self: start;">Delete</button>
         <button class="btn btn-outline-secondary btn-sm m-1"  (click)="modalRef.hide()">Cancel</button>
-        <button *ngIf="loggedIn||isNew"  [hidden]="!canSave" type="submit" class="btn btn-raised btn-outline-primary btn-sm m-1"  (click)="saveBug()">Save</button>
+        <button  [hidden]="!canSave" type="submit" class="btn btn-raised btn-outline-primary btn-sm m-1"  (click)="saveBug()">Save</button>
       </div>
     </div>
   </div>

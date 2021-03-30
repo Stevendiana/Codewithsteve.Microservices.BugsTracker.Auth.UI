@@ -16,8 +16,8 @@
                 <div class="form-group row">
                   <label for="name" class="col-md-6">Title: </label>
                   <div class="col-md-12">
-                    <input  id="name" type="text" class="form-control form-control-line" formControlName="name" placeholder="Title" autofocus>
-                    <small class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('name')">
+                    <input  id="name" type="text" class="form-control form-control-line" formControlName="name" placeholder="Title" autofocus  [ngClass]="{ 'is-invalid':hasError('name'),'is-valid':noError('name') }">
+                    <small class="form-text invalid-feedback" *ngIf="isInvalidDirtyTouched('name')">
                       <small *ngIf="hasTypeError('name','required')">{{controlMessage('name', 'required')}}</small>
                       <small *ngIf="hasTypeError('name','minlength')">{{controlMessage('name', 'minlength')}}</small>
                       <small *ngIf="hasTypeError('name','maxlength')">{{controlMessage('name', 'maxlength')}}</small>
@@ -27,8 +27,8 @@
                 <div class="form-group row">
                   <label for="description" class="col-md-6">Description: </label>
                   <div class="col-md-12">
-                    <textarea name="description"  id="description" type="text" class="form-control" formControlName="description" placeholder="Description" rows="3"></textarea>
-                    <small class="form-text text-muted danger" *ngIf="isInvalidDirtyTouched('description')">
+                    <textarea name="description"  id="description" type="text" class="form-control" formControlName="description" placeholder="Description" rows="3" [ngClass]="{ 'is-invalid':hasError('description'),'is-valid':noError('description') }"></textarea>
+                    <small class="form-text invalid-feedback" *ngIf="isInvalidDirtyTouched('description')">
                       <small *ngIf="hasTypeError('description','required')">{{controlMessage('description', 'required')}}</small>
                       <small *ngIf="hasTypeError('description','minlength')">{{controlMessage('description', 'minlength')}}</small>
                       <small *ngIf="hasTypeError('description','maxlength')">{{controlMessage('description', 'maxlength')}}</small>
@@ -42,7 +42,7 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button *ngIf="(!isNew)" class="btn btn-outline-danger col-3 btn-sm m-1">Delete</button>
+        <!-- <button *ngIf="(!isNew)" class="btn btn-outline-danger col-3 btn-sm m-1">Delete</button> -->
         <button class="btn btn-outline-secondary btn-sm col-3 m-1"  (click)="modalRef.hide()">Cancel</button>
         <button  [hidden]="!canSave" type="submit" class="btn btn-raised col-3 btn-outline-primary btn-sm m-1"  (click)="saveClient()">Save</button>
     </div>

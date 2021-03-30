@@ -6,7 +6,7 @@ export class Bug {
     resolveByDate: string='';
     name: string='';
     userCreated: string='';
-    status: string='';
+    status: string='New';
 
     projectId: string='';
     clientId: string='';

@@ -1,1 +1,232 @@
-<p>about works!</p>
+<div class="container">
+    <section id="about">
+        <h1 class="m-1">About this application</h1>
+        <div class="row">
+            <div class="col-md-12">
+                <p>This is a demo application to demonstrate how an Angular frontend application can work with an ASP.NET Core backend service to retrieve data from an Azure SQL database. </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p>This Angular client application is a single tenant app that enables development teams to manage & track bug queries raised by the users of their client-facing web applications or any other systems their users interact with.<br></p>
+                <p>Guest users <em>(users not signed in)</em> can report (Create) a new bug or read the list of bugs but cannot perform other CRUD operations like update or delete a bug. Only signed in users of the app's Azure tenant can perform all 4 operations on bugs. 
+                    Only users with Admin roles can register a client application so that it can be available to any user in the <em>"Client Application"</em> dropdown list field of the <em>"New Bug"</em>  modal form when reporting a bug or editing an old bug depending on the user's role and privileges.<br></p>
+                <div><h4 class="m-1">Design Architecture</h4></div>
+                <div class="mt-3">
+                    <ul>
+                        <li><strong>Frontend</strong>: That's this user interface application you are currently interacting with. Is built in <code>Angular 8</code>. The Angular frontend app has an ASP.NET Core backend application which uses the HTTPClient class library to call the <code>backend</code> web api service described below. This application is registered hosted in Azure as an Azure web app.</li>
+                        <li><strong>Backend</strong>: <code>ASP.NET Core 3.1 web API</code> application hosted on IIS server running on a Azure virtual machine in Microsoft Azure. Application stores data in the app's <em>Azure SQL Database</em> in Azure. It is designed in an MVC pattern and uses a unit of work repository pattern to interface with the database. Database is persisted using code-first-migration and entity framework. Dependency Injection of these repo interfaces in the Web API controllers is used to call the repository and manage CRUD operations.</li> 
+                        <li><strong>Azure SQL Database</strong>: Database runs on <code>SQL server</code> in Azure. </li>
+                        <li><strong>Class Library Project</strong>: To enable and support a scalable microservices architectural design, the solution's models are in a class library project and privately published on <em>Nuget.org</em>. </li>
+                        <li><strong>Authorization & Authentication</strong>. Identity is managed by the Microsoft Identity Platform using tenant <code>Azure Active Directory</code>. Some of the frontend features & backend APIs are restricted only to <em>signed in/admin</em> users, while anonymous users (guest users) can only access default features and navigation tabs that are available to visitors not logged in.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <img class="img-fluid m-3" alt="Card image" src="assets/solution_architect.svg">
+            </div>
+            <div class="m-1"><i > Figure 1 - CWS BugTracker Authorization code flow/Design Architecture.<br></i></div>
+        </div>
+    </section>
+    <section id="auth">
+        <div class="row"><h4 class="m-1">OAuth 2.0 Authorization Code Flow</h4></div>
+        <div class="row mt-3">
+            <p>
+                The OAuth 2.0 authorization code flow is used to perform authentication and authorization on the various applications within this web solution. The flow enables the frontend application (Angular) to securely acquire access tokens that can be used to access the backend APIs or Azure Graph API resources secured by the Microsoft identity platform, as well as enable the Angular application retrieve refresh tokens to get additional access tokens, and ID tokens for the signed in user.<br>
+                
+            </p>
+            <p>Microsoft identity platform implements 2 security standard protocols in this flow -  OAuth 2.0 and OpenID connect (OIDC). It implements authentication using the OIDC protocol, while it implements authorization using the OAuth 2.0 protocol.</p>
+    
+            <p>Authorization in this context means the permission one application grants to another application to access it's resources. While Authentication is concerned with the identification of the user who is trying to access those resources.</p>
+            <p>Note the OAuth 2.0 authorization code flow shown in Figure 1 above and a corresponding note below to explain the labelled interactions in the diagram :</p>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-12 table-responsive">
+                <table style="width:100%" class='table responsive mt-1 table-striped'>
+                    <tr>
+                      <th style="width: 5%; text-align: center;">#</th>
+                      <th style="width: 95%;">Note</th>
+                    </tr>
+                    <tr>
+                      <td> <div class="circle">1</div></td>
+                      <td><div>The <code>Resource owner </code> <em>(user)</em> attempts to access a restricted resource. For example user clicks the login button on the navbar of this Angular web application referred to as the <code>Client</code>. User is prompted to enter username and password if they don't have an active logged in session.</div> </td>
+                    </tr>
+                    <tr>
+                      <td> <div class="circle">2</div></td>
+                      <td><div>The client calls the OAuth 2.0 authentication & authorization endpoints of the Microsoft the identity platform <em>(aslo referred to as the <code>Authentication Server</code>)</em> using it's credentials including it's client id.</div> </td>
+                    </tr>
+                    <tr>
+                        <td> <div class="circle">3</div></td>
+                        <td><div>The Authorization server response with an <code>Authorization code</code>.</div> </td>
+                    </tr>
+                    <tr>
+                        <td> <div class="circle">4</div></td>
+                        <td><div>The client returns the authorization code back to the authentication server along with a client secret privately. The client secret is a secret key only the client and the authentication server knows. This secret is not exchanged in the client's browser but privately within Azure. This secret is configured during the client web app registration on Azure. </div> </td>
+                    </tr>
+                    <tr>
+                        <td> <div class="circle">5</div></td>
+                        <td><div>If the secret checks out, and authorization passes, the authorization server sends back a key called <code>access token</code> back to the client. If authentication passes, the authorization server sends back another key called <code>id token</code> back to the client also.</div> </td>
+                    </tr>
+                    <tr>
+                        <td> <div class="circle">6</div></td>
+                        <td><div>The client makes HTTP calls to the backend apis to access data using the access token. It also calls Microsoft Graph API to retrieve logged in user profile info including information about their role.</div> </td>
+                    </tr>
+                    <tr>
+                          <td> <div class="circle">7</div></td>
+                          <td><div>The backend app validates the access token with the authentication server to check if it issued it and is still valid.</div> </td>
+                    </tr>
+                    <tr>
+                        <td> <div class="circle">8</div></td>
+                        <td><div>The validation result is sent back to the backend app.</div> </td>
+                    </tr>
+                    <tr>
+                       <td> <div class="circle">9</div></td>
+                       <td><div>If validation passed, the called backend api endpoints can now be access and data is requested from the database.</div> </td>
+                    </tr>
+                    <tr>
+                        <td> <div class="circle">10</div></td>
+                        <td><div>Data retrieved.</div> </td>
+                    </tr>
+                    <tr>
+                        <td> <div class="circle">11</div></td>
+                        <td><div>Data sent back to the client.</div> </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </section>
+    <hr>
+    <section id="features">
+        <div class="row"><h4 class="m-1">App Features</h4></div>
+        <div class="row mt-3">
+            <p>Some of the application features include :</p>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-12 table-responsive">
+                <table style="width:100%" class='table responsive mt-1 table-striped'>
+                    <tr>
+                      <th style="width: 5%; text-align: center;">#</th>
+                      <th style="width: 15%;">Features</th>
+                      <th style="width: 60%;">Note</th>
+                      <th style="width: 20%;">Roles Permitted</th>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;"><i class="fas fa-chart-pie text-success p-1"></i></td>
+                        <td>Bug Profile Summary</td>
+                        <td><div>The Bug Profile charts on the home page shows 2 bugs data sets from the database. The <i class="m-1"> Bugs by status</i> chart and the <i class="m-1"> Bugs by severity</i> chart show the current status of the bugs recorded in the database and their associated severity respectively. </div> </td>
+                        <td><code>Admin, Logged-in, Guest</code></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;"><code><button class="btn btn-md btn-outline-primary"><code>+ </code>new</button></code></td>
+                        <td>Report Bug</td>
+                        <td><div>Anyone can report a new bug by creating one on the Bugs page.</div> </td>
+                        <td><code>Admin, Logged-in, Guest</code></td>
+                     </tr>
+                    <tr>
+                        <td style="text-align: center;"> 
+                            <span class="row">
+                                <i class="fa fa-bug primary p-1" aria-hidden="true" [style.color]="'green'"></i>
+                                <i class="fa fa-bug primary p-1" aria-hidden="true" [style.color]="'orange'"></i>
+                                <i class="fa fa-bug primary p-1" aria-hidden="true" [style.color]="'red'"></i>
+                            </span>
+                        </td>
+                        <td>Bugs & Severity</td>
+                        <td>
+                            <div>
+                                <p>This is a <em>calculated field</em>. The severity of a bug is a measure of the perceived or real business impact a reported bug may have on day to day business activities, and the required urgency to resolve it.</p> 
+                                <p>Priority or Impact may be "High","Medium" or "Low" with a score of 1,3 and 5 respectively. Priority score multiply by Impact score equals the Severity score.  </p>
+                                <p>For example, a high priority and a high impact situation means a high severity score and a low priority and a low impact situation means a low severity and so on and so forth.</p> 
+                            </div> 
+                        </td>
+                        <td><code>Admin, Logged-in, Guest</code></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;"><code><button class="btn btn-md btn-outline-primary"><code>+ </code>new</button></code></td>
+                        <td>Register Client</td>
+                        <td><div>Only Admin register (create) a client or perform all other crud operations.</div> </td>
+                        <td><code>Admin</code></td>
+                     </tr>
+                    
+                    <tr>
+                      <td style="text-align: center;"><i style="cursor: pointer;" class="fas fa-edit primary p-1"></i></td>
+                      <td>Edit Bug/Client</td>
+                      <td><div>Only logged-in and Admin users can edit a bug or a client.</div> </td>
+                      <td><code>Admin, Logged-in</code></td>
+                    </tr>
+                    <tr>
+                       <td style="text-align: center;"><code>BUG-xx</code></td>
+                       <td>Bug code</td>
+                       <td><div>A bug code (reference code) is generated dynamically in the backend and saved to the database when a bug is created. In similar fashion, a client code is created when a new client is created. </div> </td>
+                       <td><code>Admin, Logged-in, Guest</code></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;"> 
+                            <span class="row">
+                                <span [style.background-color]="checkStatus('New')"  class="ml-1 minidot"></span>
+                                <span [style.background-color]="checkStatus('In-Progress')"  class="ml-1 minidot"></span>
+                                <span [style.background-color]="checkStatus('Resolved')"  class="ml-1 minidot"></span>
+                                <span [style.background-color]="checkStatus('On-Hold')"  class="ml-1 minidot"></span>
+                            </span>
+                        </td>
+                        <td>Status</td>
+                        <td><div>A bug can have a status of <em>New, In-Progress, Resolved or On-Hold </em> depending on what stage managers decide to update them to. A new bug has a "New" status, when the problem is resolved, the bug status can be updated to "Resolved".</div> </td>
+                        <td><code>Admin, Logged-in</code></td>
+                      </tr>
+                      <tr>
+                        <td style="text-align: center;"><i style="cursor: pointer;" class="far fa-calendar-alt primary p-1"></i></td>
+                        <td>Date</td>
+                        <td><div>The date a bug is created to the set date they are resolved, are captured and tracked. In futre, we may decide to also track the time taken to resolve a bug etc.</div> </td>
+                        <td><code>Admin, Logged-in, Guest</code></td>
+                      </tr>
+                      <tr>
+                        <td style="text-align: center;"><i class="fas fa-trash-alt text-danger p-1"></i></td>
+                        <td>Delete</td>
+                        <td><div>Only logged-in users can delete a bug.</div> </td>
+                        <td><code>Admin, Logged-in</code></td>
+                      </tr>
+                      <tr>
+                        <td style="text-align: center;"><i class="far fa-envelope p-1"></i></td>
+                        <td>Contact Admin</td>
+                        <td><div>The <em>Contact Steve</em>  page uses an angular form to capture form inputs and email them to <a href="/contact-admin">steve@code-with-steve.com</a> using SendGrid and Azure if form validation passes.</div> </td>
+                        <td><code>Admin, Logged-in, Guess</code></td>
+                      </tr>
+                      
+                </table>
+            </div>
+        </div>
+    </section>
+    <hr>
+    <section id="sourcecode" class="mb-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div><h4 class="m-1">Source Code</h4></div>
+                <p class="mt-2">Initially, I created this project for educational and reference purposes <em>(for both myself and anyone in the community who might be interested in it)</em>, to explore how the various technologies most of us love working with work together.<br></p>
+                <p> There are 2 versions of the source code; the live demo application version <em>(i.e. the one you are reading now)</em> that has authentication & authorization code in the source code, lets call it the <code>auth-version</code>. 
+                    And the other version that doesn't have any authentication or authorization code in it, let's call that the <code>non-auth-version</code>.<br></p>
+
+                <div class="mt-3">
+                    <ul>
+                        <li><strong>auth-version</strong>: Obviously as the live version, this version continues to grow as more features and capabilities are added in due course. However, due to the sensitivity of some of the code in the source code, I am not able to share this at this time. I will be working to release a version without the sensitive code soon, so interested users can adapt it for their own projects. </li>
+                        <li><strong>non-auth-version</strong>: <br>
+
+
+                            Frontend <code>Angular 8</code> : <a href="https://github.com/Stevendiana/Codewithsteve.Microservices.BugsTracker.UI">https://github.com/Stevendiana/Codewithsteve.Microservices.BugsTracker.UI</a><br>
+                            Backend <code>ASP.NET Core 3.1 web API</code> : <a href="https://github.com/Stevendiana/Codewithsteve.Microservices.BugsTracker.API">https://github.com/Stevendiana/Codewithsteve.Microservices.BugsTracker.API</a><br>
+                            Class Library Project <code>ASP.NET Core</code> : <a href="https://github.com/Stevendiana/Codewithsteve.Microservices.BugsTracker.Models">https://github.com/Stevendiana/Codewithsteve.Microservices.BugsTracker.Models</a>
+                        </li> 
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+   
+   
+</div>
+
+
+
+

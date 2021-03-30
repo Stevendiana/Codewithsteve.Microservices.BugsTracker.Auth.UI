@@ -1,8 +1,8 @@
 <h1 id="tableLabel">Client Applications</h1>
 
 
-<p>List of managed client applications. <code>Set up and manage your client applications here.</code> Client applications have one, more or no bugs.<br>You may visit "<strong>Bugs</strong>" on the navbar above to raise new bugs, edit or assign them to a client. </p>
-<button class="btn m-1 btn-md btn-outline-primary"  (click)="newClient()"><code>+ </code>add new</button>
+<p>List of managed client applications. <span class="text-primary">Set up and manage your client applications here.</span> Client applications have one, more or no bugs.<br>You may visit "<strong>Bugs</strong>" on the navbar above to report new bugs, edit or assign them to a client. </p>
+<button class="btn m-1 btn-md btn-outline-primary"  (click)="newClient()"><code>+ </code>register new</button>
 
 <!-- <hr> -->
 
@@ -34,7 +34,7 @@
           <button class="btn m-0 p-0 btn-sm d-flex justify-content-center align-items-center">
             <i style="cursor: pointer; opacity: 0.7;" class="fas fa-trash-alt btn text-secodary p-1" 
             [popover]="'Item has more than 1 bugs. Please delete the associated bugs before returning to delete this item.'" 
-            [placement]="'right'"
+            [placement]="'top'"
             [hidden]="canDelete(client)"></i>
           </button>
         </td>

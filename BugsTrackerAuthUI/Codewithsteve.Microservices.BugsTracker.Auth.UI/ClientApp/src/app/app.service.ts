@@ -145,6 +145,16 @@ export class AppService {
     }));
   }
 
+  postContact(contact) {
+
+    console.log(contact);
+    // tslint:disable-next-line:max-line-length
+    return this.http.post(this.appUrl + 'api/contactadmin', contact).pipe(map(res => {console.log(res); }));
+  }
+
+
+  
+
   saveClient(client) {
 
     // tslint:disable-next-line:max-line-length

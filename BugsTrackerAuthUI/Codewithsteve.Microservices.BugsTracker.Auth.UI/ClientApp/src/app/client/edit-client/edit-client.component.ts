@@ -96,6 +96,11 @@ export class EditClientComponent implements OnInit {
 
   }
 
+  ngOnDestroy(): void {
+    this.clientFormSub.unsubscribe();
+  }
+
+
   showSuccess(type) {
     this.toastr.success(`${type} Client was succesfully saved to the database.`,'Saved!' ,{
       timeOut: 2000});
@@ -125,9 +130,12 @@ export class EditClientComponent implements OnInit {
     }
   }
 
+ 
   controlMessage(control, error): any {return this.validationMessages[control][error];};
   isInvalidDirtyTouched(item): boolean{return (this.f[item].invalid && (this.f[item].dirty || this.f[item].touched))};
   hasTypeError(item, type): boolean{return (this.f[item].errors[type])};
+  hasError(item): boolean{return (this.f[item].invalid&&this.f[item].touched)};
+  noError(item): boolean{return (this.f[item].valid&&this.f[item].touched)};
 
   get isNew(): boolean {return this.client&&(this.client.clientId == '' || this.client.clientId == null);}
   get canSave(): boolean {if(this.clientForm!=null||this.clientForm!=undefined) {return this.clientForm.dirty && this.clientForm.valid;}}

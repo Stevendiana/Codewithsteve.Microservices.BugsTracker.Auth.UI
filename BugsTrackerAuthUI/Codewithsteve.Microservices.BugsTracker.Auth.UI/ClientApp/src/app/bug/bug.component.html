@@ -1,8 +1,9 @@
 <h1 id="tableLabel">Bugs</h1>
 
 
-<p>List of application bugs. <code>Set up and manage your application bugs here.</code> You may raise new bugs, edit or assign them to a client. </p>
-<button class="btn m-1 btn-md btn-outline-primary"  (click)="newBug()"><code>+ </code>add new</button>
+<p>List of application bugs. <span class="text-primary">Set up and manage your application bugs here.</span> You may report new bugs, edit or assign them to a client. </p>
+<button class="btn m-1 btn-md btn-outline-primary"  (click)="newBug()"><code>+ </code>report new</button>
+<u class="btn m-1 float-right"  (click)="gotofeatures()"><code><i class="far fa-star info mr-1"></i> </code>click to read more on the app features </u>
 
 <!-- <hr> -->
 
@@ -12,7 +13,7 @@
       <tr>
         <th style="width: 5%;">#<br><br></th>
         <th>Bug<br>Code</th>
-        <th>Bug Name | App<br><br></th>
+        <th>Bug Name |<br>App</th>
         <th class="ml-1">Status<br><br></th>
         <th>Description<br><br></th>
         <th style="text-align:center">Priority<br><br></th>
@@ -24,9 +25,10 @@
     </thead>
     <tbody>
       <tr *ngFor="let bug of bugs; let i = index">
-        <td style="width: 10%;">
+        <td style="width: 12%; text-align: center;">
             <span class="row" (click)="editBug(bug)">
-              {{i+1}}<i style="cursor: pointer;" class="fas fa-edit primary p-1"></i>
+              <span class="p-1">{{i+1}}</span>
+              <i style="cursor: pointer;" class="fas fa-edit primary p-1"></i>
               <i style="cursor: pointer;" class="fa fa-bug primary p-1" aria-hidden="true" title="{{calculateInfo(bug)}}" [style.color]="colourCode(bug)"></i>
             </span>
         </td>
@@ -38,8 +40,8 @@
               <h6 class="font-small-2 text-primary mt-1 mb-0">
                 <span *ngIf="bug?.status" [style.background-color]="checkStatus(bug)"  class="ml-1 minidot"></span>
                 <span *ngIf="!bug?.status"  class="ml-1 bg-secondary minidot"></span>
-                <span class="text-monospace" style="word-break: keep-all;"><small> {{ bug.status }}</small></span>
-                <i class="ft-home font-small-2 text-secondary mr-2" title="home"></i>
+                <span class="text-monospace ml-1" style="word-break: keep-all;"><small>{{bug.status}}</small></span>
+                <!-- <i class="ft-home font-small-2 text-secondary mr-2" title="home"></i> -->
               </h6>
             </div>
           <!-- <p class="text-muted font-small-1">{{item?.resourceEmailAddress}}</p> -->
@@ -59,18 +61,40 @@
 </div>
 
 <ng-template #template>
-  <div class="modal-body text-center">
-    <div class="container">
-      <div class="row d-flex justify-content-center align-items-center">
-        <div><code>This action is not reversible.</code></div>
-        <div><p>Are you sure you want to delete this record?</p></div>
+  <div  *ngIf="!(loggedIn&&isAdmin)">
+    <div class="modal-header">
+      <h5 style="text-align: center;">Protected Operation</h5>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body text-center">
+      <div class="container">
+        <div class="row">
+          <div class="alert alert-info">
+            <p>Only an authorized logged in user can delete a bug. <em>To delete/trash icon is shown for demostration purpose only.</em>  </p>
+            <p>To get a temporary log in so that you can get permissions to edit or delete a bug as a guest user or for any questions, please <button class="btn btn-sm btn-primary"  (click)="gotoContactme()">Contact Developer</button> </p>
+          </div>
+        </div>
       </div>
-      <div class="row d-flex justify-content-center align-items-center">
-        <button type="button" class="btn btn-danger btn-sm m-1 col-3" (click)="confirm()">Yes</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm m-1 col-3" (click)="decline()">No</button>
+    </div>
+
+  </div>
+  <div *ngIf="(loggedIn&&isAdmin)">
+    <div class="modal-body text-center">
+      <div class="container">
+        <div class="row d-flex justify-content-center align-items-center">
+          <div><code>This action is not reversible.</code></div>
+          <div><p>Are you sure you want to delete this record?</p></div>
+        </div>
+        <div class="row d-flex justify-content-center align-items-center">
+          <button type="button" class="btn btn-danger btn-sm m-1 col-3" (click)="confirm()">Yes</button>
+          <button type="button" class="btn btn-outline-secondary btn-sm m-1 col-3" (click)="decline()">No</button>
+        </div>
       </div>
     </div>
   </div>
+  
 </ng-template>
 
 <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-spin-clockwise">  

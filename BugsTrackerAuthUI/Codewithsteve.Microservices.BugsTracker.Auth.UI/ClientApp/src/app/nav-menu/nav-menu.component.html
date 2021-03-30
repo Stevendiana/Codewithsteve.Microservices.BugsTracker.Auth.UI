@@ -39,29 +39,32 @@
           <li class="nav-item"
               [routerLinkActive]="['link-active']"
               [routerLinkActiveOptions]="{ exact: true }">
-            <button class="text-dark btn btn-sm btn-outline-secondary m-1" [routerLink]="['/']">Home</button>
+            <button class="btn btn-sm btn-outline-primary m-1" [routerLink]="['/']">Home</button>
           </li>
-          <li *ngIf="loggedIn" class="nav-item" [routerLinkActive]="['link-active']">
-            <button class="text-dark btn btn-sm btn-outline-secondary m-1" [routerLink]="['/about']">About</button>
-          </li>
-          <li *ngIf="loggedIn" class="nav-item" [routerLinkActive]="['link-active']">
-            <button class="text-dark btn btn-sm btn-outline-secondary m-1" [routerLink]="['/clients']">Clients</button>
+          <li *ngIf="loggedIn&&isAdmin" class="nav-item" [routerLinkActive]="['link-active']">
+            <button class="btn btn-sm btn-outline-primary m-1" [routerLink]="['/clients']">Clients</button>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <button class="text-dark btn btn-sm btn-outline-secondary m-1" [routerLink]="['/bugs']">Bugs</button>
+            <button class="btn btn-sm btn-outline-primary m-1" [routerLink]="['/bugs']">Bugs</button>
           </li>
-
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <button class="btn btn-sm btn-outline-primary m-1" [routerLink]="['/about']">About</button>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <button class="btn btn-sm btn-outline-primary m-1" [routerLink]="['/contact-admin']">Contact Admin</button>
+          </li>
           <li *ngIf="loggedIn" class="nav-item ml-5" [routerLinkActive]="['link-active']">
             <a>
               <img class="rounded-circle img-fluid" style="border-radius: 50%; cursor: pointer; width: 35px;" [routerLink]="['/profile']" *ngIf="photo" [src]="photo">
+              <img class="rounded-circle img-fluid" style="border-radius: 50%; cursor: pointer; width: 35px;" [routerLink]="['/profile']" *ngIf="photo==null" src="assets/avatar.png" >
             </a>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
             <span  *ngIf="loggedIn" class="m-1 ml-0">
-                <strong>Welcome</strong><code> {{profile?.displayName}}</code>!
+                <strong>Welcome</strong><code> {{profile?.displayName}}</code>
             </span>
             <button class="btn btn-sm btn-primary m-1" *ngIf="!loggedIn" (click)="login()">Login</button>
-            <button class="btn btn-sm btn-outline-primary m-1" *ngIf="loggedIn" (click)="logout()">Logout</button>
+            <button class="btn btn-sm btn-outline-secondary m-1" *ngIf="loggedIn" (click)="logout()">Logout</button>
            
           </li>
         </ul>

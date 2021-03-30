@@ -5,6 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AppService } from '../app.service';
 import { IBug } from '../_interfaces/bug-interface';
 import { map } from 'rxjs/operators';
+import { MsalService } from '@azure/msal-angular';
 
 @Component({
   selector: 'app-home',
@@ -22,16 +23,24 @@ export class HomeComponent implements OnInit {
   ctx2: any;
   mixcanvas: any;
   mixctx: any;
+  roles: string;
 
   chartlabelTwo = ["New", "In-Progress","Resolved","On-Hold"];
   chartlabelOne =  ["Low", "Medium","High"];
 
-  constructor(public route:Router,  private spinner: NgxSpinnerService, public appService: AppService){} 
+  constructor(public route:Router, private authService: MsalService,  private spinner: NgxSpinnerService, public appService: AppService){} 
 
   ngOnInit(){
     this.spinner.show();
     this.appService.getBugs();
     this.getBugs();
+
+
+    const account = this.authService.getAccount();
+    if (account!=null||account!=undefined) {
+      this.roles = account.idToken.roles;
+      
+    }
   }
 
   gotoBugs() {
@@ -40,6 +49,10 @@ export class HomeComponent implements OnInit {
 
   gotoClients() {
     this.route.navigate(['/clients']);
+  }
+
+  gotoContact() {
+    this.route.navigate(['/contact-admin']);
   }
 
   transformData(data){
@@ -206,4 +219,6 @@ export class HomeComponent implements OnInit {
 
    
   }
+
+  get isAdmin(): boolean { if(this.roles!=undefined&&this.roles.length>0) {return !!this.authService.getAccount()&&this.roles.includes('Admin')}};
 }

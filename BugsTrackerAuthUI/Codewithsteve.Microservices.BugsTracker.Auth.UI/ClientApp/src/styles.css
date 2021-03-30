@@ -1,8 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Provide sufficient contrast against white background */
+
 a {
   color: #0366d6;
+}
+
+.circle {
+  border-radius: 50%;
+  width: 34px;
+  /* height: 30px; */
+  padding: 1px;
+  background: rgb(89, 193, 111);
+  border: 1px solid rgb(65, 64, 64);
+  color: #fff;
+  text-align: center;
+  font:  Arial, sans-serif;
 }
 
 /* toast notification to show */
@@ -45,12 +58,57 @@ code {
   display: inline-block;
 }
 
+
+/* scrollbar starts */
+
+body {
+  overflow-x: hidden;
+}
+
+.ps .ps__scrollbar-y-rail {
+    left: 3px;
+    right: auto;
+}
+
+/* width */
+::-webkit-scrollbar {
+  height: 5px; 
+ /* height for horizontal (overflow-y) scrollbar */
+  width: 5px;
+  /* width for vertical (overflow-x) scrollbar */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px	#cccccc;
+  border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background:	#cccccc;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background:	#cccccc;
+}
+
+
+
+/* scrollbar ends */
+
 input.ng-dirty.ng-touched.ng-invalid {
   border: 1px solid red;
 }
 
 input.ng-touched.ng-valid {
   border: 1px solid green;
+}
+
+.form-text{
+  font-size: medium;
 }
 
 /* input.ng-dirty.ng-invalid {

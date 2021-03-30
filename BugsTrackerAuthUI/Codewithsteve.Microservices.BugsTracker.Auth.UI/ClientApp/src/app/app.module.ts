@@ -19,11 +19,14 @@ import { ToastrModule } from 'ngx-toastr';
 import { AppFormService } from './app-form-service';
 import { AppService } from './app.service';
 import { PopoverModule } from 'ngx-bootstrap/popover';
-import { MsalInterceptor, MsalModule, MsalService } from '@azure/msal-angular';
+import { MsalGuard, MsalInterceptor, MsalModule, MsalService } from '@azure/msal-angular';
 import { AboutComponent } from './about/about.component';
 import { ProfileComponent } from './user/profile/profile.component';
 import { AppUserService } from './app-user-service';
 import { RoleGuard } from './role.guard';
+import { ContactadminComponent } from './contactadmin/contactadmin.component';
+import { AssignBugComponent } from './bug/assign-bug/assign-bug.component';
+import { environment } from '../environments/environment';
 
 const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
 
@@ -41,6 +44,8 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
     EditBugComponent,
     ProfileComponent,
     AboutComponent,
+    ContactadminComponent,
+    AssignBugComponent,
   ],
   entryComponents: [EditBugComponent,EditClientComponent],
   imports: [
@@ -57,10 +62,11 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent},
       { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'clients', component: ClientComponent },
+      { path: 'clients', component: ClientComponent, data: {roles: ['Admin']}, canActivate: [MsalGuard, RoleGuard] },
       { path: 'bugs', component: BugComponent },
       { path: 'about', component: AboutComponent },
-      { path: 'profile', component: ProfileComponent },
+      { path: 'contact-admin', component: ContactadminComponent },
+      { path: 'profile', component: ProfileComponent, canActivate: [MsalGuard]},
     ]),
     MsalModule.forRoot({
       auth: {
@@ -81,11 +87,15 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
         'user.read',
         'openid',
         'profile',
+        'email',
+
       ],
       unprotectedResources: [],
       protectedResourceMap: [
         ['https://graph.microsoft.com/v1.0/me', ['user.read']],
         ['https://graph.microsoft.com/beta/', ['user.read']],
+        [environment.bugApi + 'bugs/', environment.scope],
+        [environment.bugApi + 'clients/', environment.scope],
       ],
       extraQueryParameters: {}
     })

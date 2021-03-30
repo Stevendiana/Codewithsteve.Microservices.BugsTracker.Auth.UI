@@ -3,7 +3,13 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  scope: ["api://e47dcf28-1a7e-4f83-b48c-0c48f934d4e0/access_as_user"],
+  bugApi: "http://bugsapi.uksouth.cloudapp.azure.com/",
+  roles: {
+    "Admin": "Admin",
+    "ReadOnly": "ReadOnly"
+  }
 };
 
 /*

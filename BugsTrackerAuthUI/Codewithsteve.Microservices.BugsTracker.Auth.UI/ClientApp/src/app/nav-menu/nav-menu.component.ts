@@ -3,12 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { BroadcastService, MsalService } from '@azure/msal-angular';
 import { CryptoUtils, Logger } from 'msal';
 import { Subscription } from 'rxjs';
-import { InteractionRequiredAuthError, AuthError } from 'msal';
 import { Router } from '@angular/router';
 import { AppUserService } from '../app-user-service';
 import { SafeUrl } from '@angular/platform-browser';
+import { AuthError, InteractionRequiredAuthError } from 'msal';
 
 const GRAPH_ENDPOINT = 'https://graph.microsoft.com/v1.0/me';
+
 
 @Component({
   selector: 'app-nav-menu',
@@ -16,10 +17,9 @@ const GRAPH_ENDPOINT = 'https://graph.microsoft.com/v1.0/me';
   styleUrls: ['./nav-menu.component.css']
 })
 export class NavMenuComponent implements OnInit {
+
   isExpanded = false;
   subscriptions: Subscription[] = [];
-
-  title = 'MSAL Angular - Sample App';
   isIframe = false;
   loggedIn = false;
   profile;
@@ -34,7 +34,14 @@ export class NavMenuComponent implements OnInit {
     private router: Router, private http: HttpClient) { }
 
   ngOnInit() {
+
+    this.authenticate();
     this.updateProfile();
+
+
+  }
+
+  authenticate() {
 
     let loginSuccessSubscription: Subscription;
     let loginFailureSubscription: Subscription;
@@ -75,6 +82,59 @@ export class NavMenuComponent implements OnInit {
 
   }
 
+  updateProfile() {
+
+    const account = this.authService.getAccount();
+    if (account!=null||account!=undefined) {
+
+      this.name = account.name;
+      this.username = account.userName;
+      this.roles = account.idToken.roles;
+  
+      console.log(this.roles);
+      console.log(this.isAdmin);
+  
+      this._graphService.getUserPhoto().subscribe(photo => this.photo = photo);
+      this._graphService.getProfile()
+      .subscribe({
+        next: (profile) => {
+          this.profile = profile;
+          console.log( this.profile);
+        },
+        error: (err: AuthError) => {
+          // If there is an interaction required error,
+          // call one of the interactive methods and then make the request again.
+          if (InteractionRequiredAuthError.isInteractionRequiredError(err.errorCode)) {
+            this.authService.acquireTokenPopup({
+              scopes: this.authService.getScopesForEndpoint(GRAPH_ENDPOINT)
+            })
+            .then(() => {
+              this.http.get(GRAPH_ENDPOINT)
+                .toPromise()
+                .then(profile => {
+                  this.profile = profile;
+                  console.log( this.profile);
+                });
+            });
+          }
+        }
+      });
+      
+    }
+   
+    
+  }
+
+  login() {
+    this._graphService.login();
+  }
+
+  logout() {
+    this._graphService.logout();
+  }
+
+
+
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
@@ -83,23 +143,6 @@ export class NavMenuComponent implements OnInit {
     this.loggedIn = !!this.authService.getAccount();
   }
 
-  login() {
-    const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
-    if (isIE) {
-      this.authService.loginRedirect();
-      this.updateProfile();
-
-    } else {
-      this.authService.loginPopup();
-      this.updateProfile();
-
-    }
-
-  }
-
-  logout() {
-    this.authService.logout();
-  }
 
   collapse() {
     this.isExpanded = false;
@@ -109,42 +152,9 @@ export class NavMenuComponent implements OnInit {
     this.isExpanded = !this.isExpanded;
   }
 
-  getProfile() {
-    this.http.get(GRAPH_ENDPOINT)
-    .subscribe({
-      next: (profile) => {
-        this.profile = profile;
-        console.log( this.profile);
-      },
-      error: (err: AuthError) => {
-        // If there is an interaction required error,
-        // call one of the interactive methods and then make the request again.
-        if (InteractionRequiredAuthError.isInteractionRequiredError(err.errorCode)) {
-          this.authService.acquireTokenPopup({
-            scopes: this.authService.getScopesForEndpoint(GRAPH_ENDPOINT)
-          })
-          .then(() => {
-            this.http.get(GRAPH_ENDPOINT)
-              .toPromise()
-              .then(profile => {
-                this.profile = profile;
-                console.log( this.profile);
-              });
-          });
-        }
-      }
-    });
-  }
 
-  updateProfile() {
+  get isAdmin(): boolean { if(this.roles!=undefined&&this.roles.length>0) {return this.roles.includes('Admin')}};
 
-    const account = this.authService.getAccount();
-    this.name = account.name;
-    this.username = account.userName;
-    this.roles = account.idToken.roles;
-    this._graphService.getUserPhoto().subscribe(photo => this.photo = photo);
-    this.getProfile();
-  }
-
+ 
  
 }

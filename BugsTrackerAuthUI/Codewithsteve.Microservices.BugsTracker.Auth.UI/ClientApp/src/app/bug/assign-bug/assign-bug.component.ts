@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
-import { MsalService } from '@azure/msal-angular';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -11,18 +9,17 @@ import { IClient } from 'src/app/_interfaces/client-interface';
 import { Bug } from 'src/app/_models/bug-model';
 
 @Component({
-  selector: 'app-edit-bug',
-  templateUrl: './edit-bug.component.html',
-  styleUrls: ['./edit-bug.component.css']
+  selector: 'app-assign-bug',
+  templateUrl: './assign-bug.component.html',
+  styleUrls: ['./assign-bug.component.css']
 })
-export class EditBugComponent implements OnInit {
+export class AssignBugComponent implements OnInit {
 
   bugForm: FormGroup;
   bug: Bug;
   mode: string;
   bugFormSub: Subscription;
   clients: IClient[]=[];
-  loggedIn = false;
 
   scores = [ 
     { name: 'Low', score: '1'},
@@ -46,7 +43,7 @@ export class EditBugComponent implements OnInit {
   private validationMessages: { [key: string]: { [key: string]: string } };
   get f() {if(this.bugForm!=null||this.bugForm!=undefined)  return this.bugForm.controls; }
 
-  constructor(  public modalRef: BsModalRef,public route:Router,private appService: AppService, private toastr: ToastrService,private authService: MsalService, private appFormService: AppFormService,) { 
+  constructor(  public modalRef: BsModalRef,private appService: AppService, private toastr: ToastrService,  private appFormService: AppFormService,) { 
 
     this.validationMessages = {
       description: {
@@ -88,37 +85,26 @@ export class EditBugComponent implements OnInit {
 
   ngOnInit() {
     this.getForm();
-    this.checkAccount();
   }
-
-  gotoContactme() {
-    this.modalRef.hide();
-    this.route.navigate(['/contact-admin']);
-  }
-
 
   getForm() {
 
-    this.bugFormSub = this.appFormService._bugForm$.subscribe((bug) => {
 
+    this.bugFormSub = this.appFormService._bugForm$.subscribe((bug) => {
       this.bugForm = bug;
       console.log(this.bugForm)
 
       if ((this.bug!=undefined||this.bug!=null)) {
-        this.bugForm.reset();
+
         this.bugForm.patchValue(this.bug);
 
-        // Can use a more efficient date library like moment.js. However, for a simple case here, I will use simple javascript date.
+        // Can you a more efficient date library like moment.js. However, for a simple case here, I will use simple javascript date.
         this.bugForm.get('resolveByDate').patchValue(this.formatDate((this.bug.resolveByDate!=null||this.bug.resolveByDate!=undefined)?new Date(this.bug.resolveByDate): new Date()));
         
       }
       
     });
   };
-
-  ngOnDestroy(): void {
-    this.bugFormSub.unsubscribe();
-  }
 
 
   private formatDate(date) {
@@ -249,10 +235,6 @@ export class EditBugComponent implements OnInit {
     }
   }
 
-  checkAccount() {
-    this.loggedIn = !!this.authService.getAccount();
-  }
-
  
   hasFormvalue(value): boolean {
     if (this.bugForm.get(value)) {
@@ -260,36 +242,12 @@ export class EditBugComponent implements OnInit {
     }
   }
 
-  checkStatus(status) {
-
-    if (status!==null||status!==undefined) {
-      if (status==='New') {
-        return 'rgba(229,229,229,1)';
-      }
-      if (status==='In-Progress') {
-        return 'rgba(153,204,153, 1)';
-      }
-      if (status==='Resolved') {
-        return 'rgba(0, 124, 0, 1)';
-      }
-      if (status==='On-Hold') {
-        return 'rgba(255,174,25,1)';
-      }
-        
-    }
-
-  }
-
   controlMessage(control, error): any {return this.validationMessages[control][error];};
   isInvalidDirtyTouched(item): boolean{return (this.f[item].invalid && (this.f[item].dirty || this.f[item].touched))};
   hasTypeError(item, type): boolean{return (this.f[item].errors[type])};
-  hasError(item): boolean{return (this.f[item].invalid&&this.f[item].touched)};
-  noError(item): boolean{return (this.f[item].valid&&this.f[item].touched)};
-
 
   get isNew(): boolean {return this.bug&&(this.bug.bugId == '' || this.bug.bugId == null);}
   get canSave(): boolean {if(this.bugForm!=null||this.bugForm!=undefined) {return (this.bugForm.dirty && this.bugForm.valid);}}
-
 
 
 

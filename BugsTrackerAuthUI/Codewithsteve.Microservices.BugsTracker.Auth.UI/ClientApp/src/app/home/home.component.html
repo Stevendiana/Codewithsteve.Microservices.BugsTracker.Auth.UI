@@ -3,34 +3,35 @@
     <div class="row">
       <h1 style="text-align: right;">Bugs Profile</h1>
     </div>
-
     <div class="row">
-      <div class="col-md-3 col-sm-12 mt-5">
-     
-        <p>To help you manage and track your application bugs. From when they occur and are raised, all the way till they are resolved:</p>
+      <div class="col-md-4 col-sm-12 mt-5">
+        <p>Manage and track system bugs from when they occur, reported and resolved:</p>
+
         <ul>
-          <li><strong>Register an application</strong>. For example, if you go to the <em>Client Applications</em> page, you will be able to register any application.</li>
+          <li><strong>Report & Track</strong>. See which bugs need urgent attention based on their <code>severity</code>. </li>
+          <li><strong>Reoprt a bug</strong>. Anyone can report a bug. If you know the application for which you want to report a bug, please click the <em>Report a bug</em> button.</li>
         </ul>
-        <button class="btn btn-raised btn-outline-primary btn-lg m-1" (click)="gotoClients()">Register</button>
+        <button class="btn btn-raised btn-outline-danger btn-lg m-1"  (click)="gotoBugs()">Report a bug</button>
       </div>
-      <div class="col-md-9 col-sm-12 right">
-        <canvas id="myChart" width="700" height="400"></canvas>
+      <div class="col-md-8 col-sm-12 left">
+        <canvas id="myChart2" width="700" height="400"></canvas>
+        <div class="m-2 d-flex text-monospace justify-content-center align-items-center"><i><h5><u>Bugs by status</u></h5><br></i></div>
       </div>
     </div>
     <hr>
     <div class="row">
-      <div class="col-md-9 col-sm-12 left">
-        <canvas id="myChart2" width="700" height="400"></canvas>
+      <div class="col-md-8 col-sm-12 right">
+        <canvas id="myChart" width="700" height="400"></canvas>
+        <div class="m-2 d-flex text-monospace justify-content-center align-items-center"><i><h5><u>Bugs by severity</u></h5><br></i></div>
       </div>
-      <div class="col-md-3 col-sm-12 mt-5">
-        <ul>
-          <li><strong>Report & Track</strong>. See which bugs need urgent attention based on their <code>severity</code>. </li>
-        </ul>
-        <button class="btn btn-raised btn-outline-danger btn-lg m-1"  (click)="gotoBugs()">Report a bug</button>
-      </div>
+      <div class="col-md-4 col-sm-12 mt-5">
      
-      
+        <ul>
+          <li><strong>Register an application</strong>. Only Admin users can register an application. If you are unable to find a client application on the dropdown menu on the bug page, plese contact Admin.</li>
+        </ul>
+        <button *ngIf="isAdmin" class="btn btn-raised btn-outline-primary btn-lg m-1" (click)="gotoClients()">Register a client app</button>
+        <button *ngIf="!isAdmin" class="btn btn-raised btn-outline-primary btn-lg m-1" (click)="gotoContact()">Contact Admin</button>
+      </div>
     </div>
-   
   </div>
 </div>

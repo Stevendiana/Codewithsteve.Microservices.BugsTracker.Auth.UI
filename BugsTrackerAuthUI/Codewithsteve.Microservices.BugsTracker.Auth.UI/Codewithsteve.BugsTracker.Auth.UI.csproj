@@ -14,9 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Codewithsteve.Microservices.BugsTracker.Models" Version="2021.1.21.16" />
+    <PackageReference Include="Codewithsteve.Microservices.BugsTracker.Models" Version="2021.1.29.1" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.11" />
+    <PackageReference Include="SendGrid" Version="9.22.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,8 +40,8 @@
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build -- --prod" />
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build:ssr -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build --prod" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build:ssr --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
 
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>

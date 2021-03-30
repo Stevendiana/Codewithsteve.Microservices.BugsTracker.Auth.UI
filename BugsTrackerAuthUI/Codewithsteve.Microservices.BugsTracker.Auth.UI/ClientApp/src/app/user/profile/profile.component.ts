@@ -23,17 +23,20 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     const account = this._msalService.getAccount();
-    this.name = account.name;
-    this.username = account.userName;
-    this.roles = account.idToken.roles;
-    this._graphService.getUserPhoto().subscribe(photo => this.photo = photo);
-    this.getProfile();
+    if (account!=null||account!=undefined) {
+      this.name = account.name;
+      this.username = account.userName;
+      this.roles = account.idToken.roles;
+      this._graphService.getUserPhoto().subscribe(photo => this.photo = photo);
+      this._graphService.getProfile().subscribe(profile => this.profile = profile);
+    }
+   
   }
 
-  getProfile() {
-    this.http.get(GRAPH_ENDPOINT)
-      .toPromise().then(profile => {
-        this.profile = profile;
-      });
-  }
+  // getProfile() {
+    // this.http.get(GRAPH_ENDPOINT)
+    //   .toPromise().then(profile => {
+    //     this.profile = profile;
+    //   });
+  // }
 }
