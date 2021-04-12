@@ -95,7 +95,7 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
       protectedResourceMap: [
         ['https://graph.microsoft.com/v1.0/me', ['user.read']],
         ['https://graph.microsoft.com/beta/', ['user.read']],
-        [environment.bugApi, [environment.scope]],
+        [environment.bugApi + 'bugs', [environment.scope]],
       ],
       extraQueryParameters: {}
     })
