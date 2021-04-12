@@ -122,8 +122,7 @@ export class AppService {
   }
 
   saveBug(bug) {
-    console.log(this.userService.tokenHttpClientHeader);
-    return this.http.put(this.appUrl + 'api/bug/' + bug['bugId'], bug, this.userService.tokenHttpClientHeader).pipe(
+    return this.http.put(this.appUrl + 'api/bug/' + bug['bugId'], bug).pipe(
         map(res => {
             
         this.bugStore.bugs=[];
@@ -161,9 +160,8 @@ export class AppService {
   
 
   saveClient(client) {
-    console.log(this.userService.tokenHttpClientHeader);
     // tslint:disable-next-line:max-line-length
-    return this.http.put(this.appUrl + 'api/client/' + client['clientId'], client, this.userService.tokenHttpClientHeader).pipe(
+    return this.http.put(this.appUrl + 'api/client/' + client['clientId'], client).pipe(
     map(res => {
         
       this.clientStore.clients=[];
@@ -193,16 +191,14 @@ export class AppService {
   }
 
   deleteBug(id){
-    console.log(this.userService.tokenHttpClientHeader);
-    return this.http.delete<Bug>(this.appUrl + 'api/bug/' + id, this.userService.tokenHttpClientHeader)
+    return this.http.delete<Bug>(this.appUrl + 'api/bug/' + id)
     .pipe(
       catchError(this.handleError)
     )
   }
 
   deleteClient(id){
-    console.log(this.userService.tokenHttpClientHeader);
-    return this.http.delete<Client>(this.appUrl + 'api/client/' + id, this.userService.tokenHttpClientHeader)
+    return this.http.delete<Client>(this.appUrl + 'api/client/' + id)
     .pipe(
       catchError(this.handleError)
     )

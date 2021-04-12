@@ -53,52 +53,5 @@ export class AppUserService {
    
   }
 
-  getToken() {
-
-    const requestObj = {
-      scopes: ["user.read"]
-    };
-    this.authService.acquireTokenSilent(requestObj).then(function (tokenResponse) {
-      
-      // Callback code here
-      console.log(tokenResponse.accessToken);
-
-      localStorage.removeItem('token');
-      localStorage.setItem('token',tokenResponse.accessToken);
-
-      // this.tokenHttpClientHeader;
-
-      }).catch(function (error) { console.log(error);
-
-    });
-
-  }
-
-  get tokenHttpClientHeader() {
-
-    this.getToken();
-    if (localStorage.getItem('token')!=null) {
-      const header = new HttpHeaders({'Authorization': 'Bearer ' + localStorage.getItem('token'),
-      'Content-Type': 'application/json; charset=utf-8'});
-      return ({headers: header});
-    }
-    
-  }
-
-  tokenHttpClientHeaderWithQuery(query) {
-    this.getToken();
-    const httpParams: HttpParamsOptions = { fromObject: query } as HttpParamsOptions;
-
-    const header = new HttpHeaders({'Authorization': 'Bearer ' + localStorage.getItem('token'),
-    'Content-Type': 'application/json; charset=utf-8'});
-
-    const options = { params: new HttpParams(httpParams), headers: header };
-   
-    return (options);
-  }
-
-
-  
-
-
+ 
 }
