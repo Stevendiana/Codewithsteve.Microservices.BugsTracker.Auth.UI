@@ -28,6 +28,7 @@ export class NavMenuComponent implements OnInit {
   roles: string;
   username: string;
   photo: SafeUrl;
+  
 
   constructor(private broadcastService: BroadcastService, 
     private authService: MsalService,private _graphService: AppUserService,

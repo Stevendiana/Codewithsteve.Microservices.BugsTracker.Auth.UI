@@ -3,10 +3,12 @@ import {map, catchError, tap} from 'rxjs/operators';
 import { Inject, Injectable } from '@angular/core';
 import { IBug } from './_interfaces/bug-interface';
 import { IClient } from './_interfaces/client-interface';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Bug } from './_models/bug-model';
 import { Client } from './_models/client-model ';
+import { MsalService } from '@azure/msal-angular';
+import { AppUserService } from './app-user-service';
 
 
 @Injectable()
@@ -17,6 +19,8 @@ export class AppService {
   
   public _bugs: BehaviorSubject<IBug[]>;
   public _clients: BehaviorSubject<IClient[]>;
+
+   
 
 
   public bugStore: {
@@ -56,7 +60,7 @@ export class AppService {
 
   
 
-  constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string)
+  constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string,private userService: AppUserService)
   // tslint:disable-next-line:one-line
   {
     this.appUrl = baseUrl;
@@ -118,8 +122,8 @@ export class AppService {
   }
 
   saveBug(bug) {
-
-    return this.http.put(this.appUrl + 'api/bug/' + bug['bugId'], bug).pipe(
+    console.log(this.userService.tokenHttpClientHeader);
+    return this.http.put(this.appUrl + 'api/bug/' + bug['bugId'], bug, this.userService.tokenHttpClientHeader).pipe(
         map(res => {
             
         this.bugStore.bugs=[];
@@ -130,6 +134,7 @@ export class AppService {
     }));
  }
 
+ 
  
   postClient(client) {
 
@@ -156,9 +161,9 @@ export class AppService {
   
 
   saveClient(client) {
-
+    console.log(this.userService.tokenHttpClientHeader);
     // tslint:disable-next-line:max-line-length
-    return this.http.put(this.appUrl + 'api/client/' + client['clientId'], client).pipe(
+    return this.http.put(this.appUrl + 'api/client/' + client['clientId'], client, this.userService.tokenHttpClientHeader).pipe(
     map(res => {
         
       this.clientStore.clients=[];
@@ -188,14 +193,16 @@ export class AppService {
   }
 
   deleteBug(id){
-    return this.http.delete<Bug>(this.appUrl + 'api/bug/' + id)
+    console.log(this.userService.tokenHttpClientHeader);
+    return this.http.delete<Bug>(this.appUrl + 'api/bug/' + id, this.userService.tokenHttpClientHeader)
     .pipe(
       catchError(this.handleError)
     )
   }
 
   deleteClient(id){
-    return this.http.delete<Client>(this.appUrl + 'api/client/' + id)
+    console.log(this.userService.tokenHttpClientHeader);
+    return this.http.delete<Client>(this.appUrl + 'api/client/' + id, this.userService.tokenHttpClientHeader)
     .pipe(
       catchError(this.handleError)
     )

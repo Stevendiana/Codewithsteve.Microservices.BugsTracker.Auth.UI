@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import {throwError as observableThrowError,  Observable } from 'rxjs';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
-import { HttpClient } from '@angular/common/http';
+import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { MsalService } from '@azure/msal-angular';
+import { HttpParamsOptions } from './httpParamsOptions';
 
 const GRAPH_ENDPOINT = 'https://graph.microsoft.com/v1.0/me';
 const requestUrl = `https://graph.microsoft.com/beta/me/photo/$value`;
@@ -14,8 +15,14 @@ const url = window.URL;
   providedIn: 'root'
 })
 export class AppUserService {
-  
+
+  private accessToken: any; 
   avatar = 'assets/avatar.png';
+  httpOptions = {  
+    headers: new HttpHeaders({  
+        'Content-Type': 'application/json'  
+    })  
+  }; 
  
 
   constructor(private http: HttpClient, private sanitizer: DomSanitizer, 
@@ -46,8 +53,52 @@ export class AppUserService {
    
   }
 
+  getToken() {
+
+    const requestObj = {
+      scopes: ["user.read"]
+    };
+    this.authService.acquireTokenSilent(requestObj).then(function (tokenResponse) {
+      
+      // Callback code here
+      console.log(tokenResponse.accessToken);
+
+      localStorage.removeItem('token');
+      localStorage.setItem('token',tokenResponse.accessToken);
+
+      // this.tokenHttpClientHeader;
+
+      }).catch(function (error) { console.log(error);
+
+    });
+
+  }
+
+  get tokenHttpClientHeader() {
+
+    this.getToken();
+    if (localStorage.getItem('token')!=null) {
+      const header = new HttpHeaders({'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      'Content-Type': 'application/json; charset=utf-8'});
+      return ({headers: header});
+    }
+    
+  }
+
+  tokenHttpClientHeaderWithQuery(query) {
+    this.getToken();
+    const httpParams: HttpParamsOptions = { fromObject: query } as HttpParamsOptions;
+
+    const header = new HttpHeaders({'Authorization': 'Bearer ' + localStorage.getItem('token'),
+    'Content-Type': 'application/json; charset=utf-8'});
+
+    const options = { params: new HttpParams(httpParams), headers: header };
+   
+    return (options);
+  }
 
 
+  
 
 
 }

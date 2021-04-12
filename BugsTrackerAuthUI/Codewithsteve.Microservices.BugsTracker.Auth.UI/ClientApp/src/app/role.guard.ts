@@ -18,4 +18,18 @@ export class RoleGuard implements CanActivate {
     const matchingRoles = userRoles.filter(x => allowedRoles.includes(x));
     return matchingRoles.length > 0;
   }
+
+  canActivate$(route: ActivatedRouteSnapshot): boolean {
+    const expectedRole = route.data.roles;
+
+   if (!this._msalService.getAccount().idTokenClaims.roles) {
+      window.alert('Token does not have roles claim. Please ensure that your account is assigned to an app role and then sign-out and sign-in again.');
+      return false;
+   } else if (!this._msalService.getAccount().idTokenClaims.roles.includes(expectedRole)) {
+      window.alert('You do not have access as expected role is missing. Please ensure that your account is assigned to an app role and then sign-out and sign-in again.');
+      return false;
+   }
+
+    return true;
+  }
 }
