@@ -10,6 +10,8 @@ import { IClient } from '../_interfaces/client-interface';
 import { Bug } from '../_models/bug-model';
 import { EditBugComponent } from './edit-bug/edit-bug.component';
 
+import * as data from '../data/data';
+
 @Component({
   selector: 'app-bug',
   templateUrl: './bug.component.html',
@@ -43,9 +45,9 @@ export class BugComponent implements OnInit {
 
   ngOnInit() {
     this.spinner.show();
-    this.appService.getBugs();
+    // this.appService.getBugs();
     this.getBugs();
-    this.appService.getClients();
+    // this.appService.getClients();
     this.checkAccount();
 
   }
@@ -130,28 +132,45 @@ export class BugComponent implements OnInit {
 
  
 
-  getBugs() {
+  // getBugs() {
 
-    this.appService.bugs.subscribe((data: IBug[]=[])=>{
-      console.log(data)
-      if (data.length > 0) {
-        this.bugs=data;
+  //   this.appService.bugs.subscribe((data: IBug[]=[])=>{
+  //     console.log(data)
+  //     if (data.length > 0) {
+  //       this.bugs=data;
       
-      }
-      this.spinner.hide();
+  //     }
+  //     this.spinner.hide();
 
-    })
+  //   })
+  // }
+
+  // getClients() {
+
+  //   this.appService.clients.subscribe((data: IClient[]=[])=>{
+  //     console.log(data)
+  //     if (data.length > 0) {
+  //       this.clients=data;
+      
+  //     }
+  //   })
+  // }
+
+  getBugs() {
+    this.getClients();
+    this.bugs=data.bugs;
+    this.bugs.map(x=>{
+      let rand = (Math.random().toString(36).substr(2, 8)).toUpperCase();
+      x.clientName = x.bugId==''? this.clients.find(y=>y.clientId==x.clientId).name : x.clientName;
+      x.bugCode = x.bugId==''? `BUG-${rand}`: x.bugCode;
+      x.dateCreated = x.bugId==''? new Date().toLocaleDateString(): x.dateCreated;
+    });
+    this.spinner.hide();
   }
 
   getClients() {
 
-    this.appService.clients.subscribe((data: IClient[]=[])=>{
-      console.log(data)
-      if (data.length > 0) {
-        this.clients=data;
-      
-      }
-    })
+    this.clients=data.clients;
   }
 
   newBug() {
@@ -169,18 +188,19 @@ export class BugComponent implements OnInit {
   editBug(bug: Bug) {
 
     this.getClients();
-    this.appService.getBug(bug.bugId).subscribe((bug$: Bug) => { this.bug = bug$;
+    // this.appService.getBug(bug.bugId).subscribe((bug$: Bug) => { this.bug = bug$;
+    this.bug=this.bugs.find(x=>x.bugId==bug.bugId);
          
-      if (bug$) {
+      if (this.bug) {
         const initialState = {
-          bug: bug$,
+          bug: this.bug,
           mode: 'Edit',
           clients: this.clients
         };
         this.modalRef = this.modalService.show(EditBugComponent, Object.assign({}, this.modalConfig, { class: 'modal-lg', initialState }));
         this.modalRef.content.closeBtnName = 'Close';
       }
-    });
+    // });
   
   
   }

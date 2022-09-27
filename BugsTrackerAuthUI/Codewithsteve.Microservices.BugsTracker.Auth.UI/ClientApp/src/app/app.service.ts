@@ -9,6 +9,7 @@ import { Bug } from './_models/bug-model';
 import { Client } from './_models/client-model ';
 import { MsalService } from '@azure/msal-angular';
 import { AppUserService } from './app-user-service';
+import { AuthService } from './auth.service';
 
 
 @Injectable()
@@ -60,7 +61,9 @@ export class AppService {
 
   
 
-  constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string,private userService: AppUserService)
+  constructor(
+    // private authService: AuthService,
+    private http: HttpClient, @Inject('BASE_URL') baseUrl: string,private userService: AppUserService)
   // tslint:disable-next-line:one-line
   {
     this.appUrl = baseUrl;
@@ -122,6 +125,8 @@ export class AppService {
   }
 
   saveBug(bug) {
+
+    //this.authService.initializeAuth();
     return this.http.put(this.appUrl + 'api/bug/' + bug['bugId'], bug).pipe(
         map(res => {
             
@@ -135,8 +140,9 @@ export class AppService {
 
  
  
-  postClient(client) {
+    postClient(client) {
 
+    //this.authService.initializeAuth();
     // tslint:disable-next-line:max-line-length
     return this.http.post(this.appUrl + 'api/client', client).pipe(
     map(res => {
@@ -161,6 +167,7 @@ export class AppService {
 
   saveClient(client) {
     // tslint:disable-next-line:max-line-length
+    //this.authService.initializeAuth();
     return this.http.put(this.appUrl + 'api/client/' + client['clientId'], client).pipe(
     map(res => {
         
@@ -191,6 +198,8 @@ export class AppService {
   }
 
   deleteBug(id){
+
+    //this.authService.initializeAuth();
     return this.http.delete<Bug>(this.appUrl + 'api/bug/' + id)
     .pipe(
       catchError(this.handleError)
@@ -198,6 +207,8 @@ export class AppService {
   }
 
   deleteClient(id){
+
+    //this.authService.initializeAuth();
     return this.http.delete<Client>(this.appUrl + 'api/client/' + id)
     .pipe(
       catchError(this.handleError)

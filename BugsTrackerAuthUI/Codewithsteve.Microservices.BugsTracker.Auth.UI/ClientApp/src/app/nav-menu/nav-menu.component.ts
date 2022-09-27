@@ -57,7 +57,7 @@ export class NavMenuComponent implements OnInit {
     });
 
     loginFailureSubscription = this.broadcastService.subscribe('msal:loginFailure', (error) => {
-      console.log('Login Fails:', error);
+      // console.log('Login Fails:', error);
     });
 
     this.subscriptions.push(loginSuccessSubscription);
@@ -65,15 +65,14 @@ export class NavMenuComponent implements OnInit {
 
     this.authService.handleRedirectCallback((authError, response) => {
       if (authError) {
-        console.error('Redirect Error: ', authError.errorMessage);
+        // console.error('Redirect Error: ', authError.errorMessage);
         return;
       }
 
-      console.log('Redirect Success: ', response.accessToken);
+      // console.log('Redirect Success: ', response.accessToken);
     });
 
     this.authService.setLogger(new Logger((logLevel, message, piiEnabled) => {
-      console.log('MSAL Logging: ', message);
     }, {
       correlationId: CryptoUtils.createNewGuid(),
       piiLoggingEnabled: false
@@ -91,15 +90,12 @@ export class NavMenuComponent implements OnInit {
       this.username = account.userName;
       this.roles = account.idToken.roles;
   
-      console.log(this.roles);
-      console.log(this.isAdmin);
   
       this._graphService.getUserPhoto().subscribe(photo => this.photo = photo);
       this._graphService.getProfile()
       .subscribe({
         next: (profile) => {
           this.profile = profile;
-          console.log( this.profile);
         },
         error: (err: AuthError) => {
           // If there is an interaction required error,
@@ -113,7 +109,6 @@ export class NavMenuComponent implements OnInit {
                 .toPromise()
                 .then(profile => {
                   this.profile = profile;
-                  console.log( this.profile);
                 });
             });
           }

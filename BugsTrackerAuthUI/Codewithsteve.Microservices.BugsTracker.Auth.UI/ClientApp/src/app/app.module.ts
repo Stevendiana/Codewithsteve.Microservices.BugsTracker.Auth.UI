@@ -27,8 +27,13 @@ import { RoleGuard } from './role.guard';
 import { ContactadminComponent } from './contactadmin/contactadmin.component';
 import { AssignBugComponent } from './bug/assign-bug/assign-bug.component';
 import { environment } from '../environments/environment';
+import { AuthService } from './auth.service';
 
 const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
+
+// export const protectedResourceMap: [string, string[]][] = [
+//   ['https://graph.microsoft.com/v1.0/me', ['user.read']]
+// ];
 
 
 @NgModule({
@@ -74,6 +79,8 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
         authority: environment.authority,
         // redirectUri: 'http://localhost:4200/',
         redirectUri: environment.redirectUri,
+        postLogoutRedirectUri: environment.redirectUri,
+        navigateToLoginRequestUrl: true,
        
       },
       cache: {
@@ -95,7 +102,7 @@ const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigato
       protectedResourceMap: [
         ['https://graph.microsoft.com/v1.0/me', ['user.read']],
         ['https://graph.microsoft.com/beta/', ['user.read']],
-        [environment.bugApi + 'bugs', [environment.scope]],
+        [environment.bugApi, [environment.scope]],
       ],
       extraQueryParameters: {}
     })

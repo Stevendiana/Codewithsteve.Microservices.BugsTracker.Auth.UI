@@ -7,6 +7,8 @@ import { IBug } from '../_interfaces/bug-interface';
 import { map } from 'rxjs/operators';
 import { MsalService } from '@azure/msal-angular';
 
+import * as data from '../data/data';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -32,7 +34,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(){
     this.spinner.show();
-    this.appService.getBugs();
+    // this.appService.getBugs();
+    
     this.getBugs();
 
 
@@ -91,7 +94,7 @@ export class HomeComponent implements OnInit {
       
     });
 
-    console.log(this.chartOneData);
+    // console.log(this.chartOneData);
 
   
    
@@ -100,19 +103,33 @@ export class HomeComponent implements OnInit {
 
   getBugs() {
 
-    this.appService.bugs.subscribe((res)=>{
-      console.log(res)
-      if (res.length > 0) {
-        this.bug$=res;
-        this.transformData(this.bug$);
-        this.chartOne();
-        this.chartTwo()
+    this.bug$=data.bugs;
+    // console.log('bugs',this.bug$)
+    if (this.bug$.length > 0) {
+      this.transformData(this.bug$);
+      this.chartOne();
+      this.chartTwo()
 
-      }
-      this.spinner.hide();
-
-    })
+    }
+    this.spinner.hide();
+    
   }
+
+  // getBugs() {
+
+  //   this.appService.bugs.subscribe((res)=>{
+  //     console.log(res)
+  //     if (res.length > 0) {
+  //       this.bug$=res;
+  //       this.transformData(this.bug$);
+  //       this.chartOne();
+  //       this.chartTwo()
+
+  //     }
+  //     this.spinner.hide();
+
+  //   })
+  // }
 
   chartOne(){
 

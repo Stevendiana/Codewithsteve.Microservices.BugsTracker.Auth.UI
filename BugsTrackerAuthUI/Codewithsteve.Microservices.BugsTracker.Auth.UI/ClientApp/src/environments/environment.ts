@@ -8,8 +8,11 @@ export const environment = {
   tenantId: 'cc62c95e-bb02-4841-ae1e-9bafd6e5d6b5',
   authority: 'https://login.microsoftonline.com/cc62c95e-bb02-4841-ae1e-9bafd6e5d6b5',
   redirectUri: 'https://codewithstevemicroservicesbugstrackerauth.azurewebsites.net/',
+  // redirectUri: 'https://localhost:44370/',
+ 
   scope: "api://e47dcf28-1a7e-4f83-b48c-0c48f934d4e0/access_as_user",
-  bugApi: "http://bugsapi.uksouth.cloudapp.azure.com/",
+  // bugApi: "http://www.pmo.tools/",
+  bugApi: "https://localhost:44330/",
   bugApiprod: "https://localhost:44330/",
   roles: {
     "Admin": "Admin",

@@ -11,7 +11,9 @@ namespace Codewithsteve.BugsTracker.Auth.UI.Controllers
     public class BugController : Controller
     {
         HttpClient httpClient = new HttpClient();
-        string url = "http://bugsapi.uksouth.cloudapp.azure.com/";
+        string url = "https://localhost:44330/";
+        //string url = "http://bugsapi.uksouth.cloudapp.azure.com/";
+        //string url = "http://www.pmo.tools/";
 
         // GET: api/<BugController>
         [HttpGet]

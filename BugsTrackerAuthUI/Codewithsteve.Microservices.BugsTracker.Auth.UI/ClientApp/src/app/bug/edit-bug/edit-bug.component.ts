@@ -10,6 +10,9 @@ import { AppService } from 'src/app/app.service';
 import { IClient } from 'src/app/_interfaces/client-interface';
 import { Bug } from 'src/app/_models/bug-model';
 
+import * as data from '../../data/data';
+import { IBug } from '../../_interfaces/bug-interface';
+
 @Component({
   selector: 'app-edit-bug',
   templateUrl: './edit-bug.component.html',
@@ -22,6 +25,7 @@ export class EditBugComponent implements OnInit {
   mode: string;
   bugFormSub: Subscription;
   clients: IClient[]=[];
+  bugs: IBug[]=[];
   loggedIn = false;
 
   scores = [ 
@@ -102,7 +106,7 @@ export class EditBugComponent implements OnInit {
     this.bugFormSub = this.appFormService._bugForm$.subscribe((bug) => {
 
       this.bugForm = bug;
-      console.log(this.bugForm)
+      // console.log(this.bugForm)
 
       if ((this.bug!=undefined||this.bug!=null)) {
         this.bugForm.reset();
@@ -136,33 +140,73 @@ export class EditBugComponent implements OnInit {
 
     if (this.bugForm.dirty && this.bugForm.valid) {
 
-      const p = Object.assign({},this.bugForm.value);
+      // const p = Object.assign({},this.bugForm.value);
      
-      console.log(p);
+      // console.log(p);
+      // if (this.bug&&this.bug.bugId!='') {
+
+      //   this.appService.saveBug(p)
+      //   .subscribe(() =>{ this.onSaveComplete(); this.showSuccess('');},
+      //       (error: any) => {this.errorMessage = <any>error, this.showError();}
+      //   );
+        
+      // } else {
+
+      //   this.appService.postBug(p)
+      //   .subscribe(() =>{ this.onSaveComplete(); this.showSuccess('New');},
+      //       (error: any) => {this.errorMessage = <any>error, this.showError();}
+      //   );
+        
+      // }
+
+      //frontend save
+      this.bugs=data.bugs;
+      console.log(this.bugForm.value)
       if (this.bug&&this.bug.bugId!='') {
-
-        this.appService.saveBug(p)
-        .subscribe(() =>{ this.onSaveComplete(); this.showSuccess('');},
-            (error: any) => {this.errorMessage = <any>error, this.showError();}
-        );
-        
+        const p = Object.assign({},this.bugForm.value);
+        let bug = this.bugs.find(x=>x.bugId==this.bug.bugId);
+        // var filtered = this.bugs.filter(function(el) { return el.bugCode != bug.bugCode; }); 
+        for( var i = 0; i < this.bugs.length; i++){ 
+                                   
+          if ( this.bugs[i].bugCode === bug.bugCode) { 
+            this.bugs.splice(i, 1); 
+              i--; 
+          }
+        }
+        this.bugs.push(p);
+        this.showSuccess('');
+        this.modalRef.hide();
+        this.getBugs();
+          
       } else {
-
-        this.appService.postBug(p)
-        .subscribe(() =>{ this.onSaveComplete(); this.showSuccess('New');},
-            (error: any) => {this.errorMessage = <any>error, this.showError();}
-        );
         
+        const p = Object.assign({},this.bugForm.value);
+        this.bugs.push(p);
+        this.showSuccess('New');
+        this.modalRef.hide();
+        this.getBugs();
       }
-
-    
     } 
     else {
       return;
     }
-    
 
+  }
 
+  getBugs() {
+    this.getClients();
+    this.bugs=data.bugs;
+    this.bugs.map(x=>{
+      let rand = (Math.random().toString(36).substr(2, 8)).toUpperCase();
+      x.clientName = x.bugId==''? this.clients.find(y=>y.clientId==x.clientId).name : x.clientName;
+      x.bugCode = x.bugId==''? `BUG-${rand}`: x.bugCode;
+      x.dateCreated = x.bugId==''? new Date().toLocaleDateString(): x.dateCreated;
+    });
+  }
+
+  getClients() {
+
+    this.clients=data.clients;
   }
 
  
@@ -198,7 +242,6 @@ export class EditBugComponent implements OnInit {
         const severityLevel = this.setSeverityLevel();
         level.setValue(severityLevel);
 
-        console.log(score)
         return score;
       }
       
